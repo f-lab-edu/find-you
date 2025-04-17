@@ -1,3 +1,2 @@
 rootProject.name = 'find-you'
 include 'api'
-include 'core'

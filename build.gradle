@@ -7,17 +7,11 @@ plugins {
 group = 'com.aksrua'
 version = '0.0.1-SNAPSHOT'
 
-java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
-	}
-}
-
 repositories {
 	mavenCentral()
 }
 
-subprojects { // 모든 하위 모듈들에 이 설정을 적용합니다.
+subprojects {
 	group 'com.example'
 	version '0.0.1-SNAPSHOT'
 	sourceCompatibility = '21'
@@ -26,12 +20,6 @@ subprojects { // 모든 하위 모듈들에 이 설정을 적용합니다.
 	apply plugin: 'java-library'
 	apply plugin: 'org.springframework.boot'
 	apply plugin: 'io.spring.dependency-management'
-
-	configurations {
-		compileOnly {
-			extendsFrom annotationProcessor
-		}
-	}
 
 	repositories {
 		mavenCentral()
@@ -46,7 +34,3 @@ subprojects { // 모든 하위 모듈들에 이 설정을 적용합니다.
 		useJUnitPlatform()
 	}
 }
-
-jar { enabled = true }
-
-bootJar { enabled = false }

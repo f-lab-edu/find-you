@@ -3,7 +3,6 @@ package com.aksrua.card.controller;
 import com.aksrua.card.dto.response.CardResponseDto;
 import java.util.ArrayList;
 import java.util.List;
-import javax.smartcardio.Card;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

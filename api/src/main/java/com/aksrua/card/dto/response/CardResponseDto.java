@@ -13,5 +13,5 @@ public class CardResponseDto {
 	private String gender;
 	private double distanceKm;
 	private List<String> imagesUrl;
-	private List<String> hobbyTags;
+	private List<String> hobbies;
 }

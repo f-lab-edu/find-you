@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class InMemoryCardRepository implements CardRepository {
-	private final Map<Long, Card> store = new HashMap<>();
+	private Map<Long, Card> store = new HashMap<>();
 	private long seq = 1L;
 
 	InMemoryCardRepository() {

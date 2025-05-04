@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:9.3.0-1.el9
+    container_name: find-you
+    environment:
+      MYSQL_ROOT_PASSWORD: 920214
+      MYSQL_DATABASE: findyou
+      MYSQL_USER: aksrua
+      MYSQL_PASSWORD: 920214
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - find-you
+
+  spring-app:
+    build: .
+    container_name: find-you
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/findyou?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: aksrua
+      SPRING_DATASOURCE_PASSWORD: 920214
+    networks:
+      - find-you
+
+networks:
+  spring-mysql-network:
+    driver: find-you
+
+volumes:
+  mysql-data:

@@ -1,6 +1,5 @@
 package com.aksrua.card.dto.response;
 
-import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -8,10 +7,15 @@ import lombok.Getter;
 @Builder
 public class CardResponseDto {
 	private Long id;
-	private String nickname;
-	private int age;
+	private Long userId;
 	private String gender;
+	private String nickname;
+	private Integer age;
+	private String job;
+	private String address;
+	private String introduction;
 	private double distanceKm;
-	private List<String> imagesUrl;
-	private List<String> hobbies;
+	private String imagesUrl;
+	private String hobbies;
+	private String religion;
 }

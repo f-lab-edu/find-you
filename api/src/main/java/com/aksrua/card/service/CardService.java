@@ -1,9 +1,8 @@
 package com.aksrua.card.service;
 
-import com.aksrua.card.dto.response.CardResponseDto;
-import com.aksrua.card.repository.CardRepository;
+import com.aksrua.card.data.entity.Card;
+import com.aksrua.card.data.repository.CardRepository;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,18 +14,8 @@ public class CardService {
 		this.cardRepository = cardRepository;
 	}
 
-	public List<CardResponseDto> getCardList() {
-		return cardRepository.getCardList()
-				.stream()
-				.map(card -> CardResponseDto.builder()
-						.id(card.getId())
-						.nickname(card.getNickname())
-						.age(card.getAge())
-						.gender(card.getGender())
-						.distanceKm(card.getDistanceKm())
-						.imagesUrl(card.getImagesUrl())
-						.hobbies(card.getHobbies())
-						.build())
-				.collect(Collectors.toList());
+	public List<Card> getCardList() {
+		//TODO: userId 를 통해 필터링 데이터를 조회한다.
+		return cardRepository.findTop10ByOrderByCreatedAtDesc();
 	}
 }

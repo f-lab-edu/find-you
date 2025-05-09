@@ -5,5 +5,12 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CardRepository extends JpaRepository<Card, Long> {
+	/**
+	 * @return Card list 10장
+	 * @Desc: 특정 시간마다 보여주는 10장의 소개팅 카드
+	 * TODO
+	 * i) 이성만을 조회해야한다.
+	 * ii) user가 갖고있는 필터링을 조회하여 상대 카드를 조회한다.
+	 */
 	List<Card> findTop10ByOrderByCreatedAtDesc();
 }

@@ -16,20 +16,6 @@ services:
     networks:
       - find-you
 
-  spring-app:
-    build: .
-    container_name: find-you
-    ports:
-      - "8080:8080"
-    depends_on:
-      - mysql
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/findyou?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-      SPRING_DATASOURCE_USERNAME: aksrua
-      SPRING_DATASOURCE_PASSWORD: 920214
-    networks:
-      - find-you
-
 networks:
   spring-mysql-network:
     driver: find-you

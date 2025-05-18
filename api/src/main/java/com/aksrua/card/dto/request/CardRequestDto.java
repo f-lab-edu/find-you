@@ -6,5 +6,5 @@ import lombok.Getter;
 @Getter
 @Builder
 public class CardRequestDto {
-	private Long id;
+	private Long cardId;
 }

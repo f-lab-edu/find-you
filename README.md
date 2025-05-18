@@ -13,3 +13,10 @@
 - controller까지 작성 -> api spec -> DTO -> 통합 테스트
 - API spec에 대한 통합 테스트
 - 테스트의 대상은 API spec이다.
+
+### response body 통일
+{
+code : 
+message : 
+data : 
+}

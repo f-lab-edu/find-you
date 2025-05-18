@@ -17,8 +17,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
+@ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -57,16 +59,19 @@ public class User {
 		this.updatedAt = LocalDateTime.now();
 	}
 
-	@Override
-	public String toString() {
-		return "User{" +
-				"id=" + id +
-				", username='" + username + '\'' +
-				", email='" + email + '\'' +
-				", phoneNumber='" + phoneNumber + '\'' +
-				", card=" + card +
-				", createdAt=" + createdAt +
-				", updatedAt=" + updatedAt +
-				'}';
+	@Builder
+	public User(Long id, String username, String email, String phoneNumber, Card card) {
+		this.id = id;
+		this.username = username;
+		this.email = email;
+		this.phoneNumber = phoneNumber;
+		this.card = card;
+	}
+
+	@Builder
+	public User(String username, String email, String phoneNumber) {
+		this.username = username;
+		this.email = email;
+		this.phoneNumber = phoneNumber;
 	}
 }

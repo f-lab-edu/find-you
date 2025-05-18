@@ -12,6 +12,7 @@ public class UserService {
 	private final UserRepository userRepository;
 
 	public User signup(User user) {
+		//TODO: email, id 검증
 		return userRepository.save(user);
 	}
 }

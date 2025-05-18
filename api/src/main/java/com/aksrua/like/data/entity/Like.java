@@ -43,4 +43,10 @@ public class Like {
 	protected void onCreate() {
 		this.createdAt = LocalDateTime.now();
 	}
+
+	@Builder
+	public Like(Card senderCard, Card receiverCard) {
+		this.senderCard = senderCard;
+		this.receiverCard = receiverCard;
+	}
 }

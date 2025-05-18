@@ -15,5 +15,7 @@ public class SignupRequestDto {
 
 	private String email;
 
+	//TODO: private String password
+
 	private String phoneNumber;
 }

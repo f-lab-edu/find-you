@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SignupResponseDto {
 
+	//TODO: db의 id를 보여줄 필요가 있을까 ? email로 변경 ?
 	private Long userId;
 
 	public static SignupResponseDto fromEntity(User user) {

@@ -4,9 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Builder
 @Getter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateCardRequestDto {
@@ -26,18 +28,4 @@ public class CreateCardRequestDto {
 	private String introduction;
 
 	private String religion;
-
-	@Override
-	public String toString() {
-		return "CreateCardRequestDto{" +
-				"userId=" + userId +
-				", gender='" + gender + '\'' +
-				", nickname='" + nickname + '\'' +
-				", age=" + age +
-				", job='" + job + '\'' +
-				", address='" + address + '\'' +
-				", introduction='" + introduction + '\'' +
-				", religion='" + religion + '\'' +
-				'}';
-	}
 }

@@ -31,10 +31,6 @@ public class Card {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	/*
-	@Column(nullable = false)
-	private Long userId;
-	*/
 	@OneToOne
 	@JoinColumn(name = "user_id")
 	private User user;
@@ -65,9 +61,11 @@ public class Card {
 
 	private String religion;
 
+	@Builder.Default
 	@OneToMany(mappedBy = "senderCard")
 	private List<Like> sentLikes = new ArrayList<>();
 
+	@Builder.Default
 	@OneToMany(mappedBy = "receiverCard")
 	private List<Like> receivedLikes = new ArrayList<>();
 
@@ -86,25 +84,19 @@ public class Card {
 		this.updatedAt = LocalDateTime.now();
 	}
 
-	@Override
-	public String toString() {
-		return "Card{" +
-				"id=" + id +
-				", user=" + user +
-				", gender='" + gender + '\'' +
-				", nickname='" + nickname + '\'' +
-				", age=" + age +
-				", job='" + job + '\'' +
-				", address='" + address + '\'' +
-				", introduction='" + introduction + '\'' +
-				", distanceKm=" + distanceKm +
-				", imagesUrl='" + imagesUrl + '\'' +
-				", hobbies='" + hobbies + '\'' +
-				", religion='" + religion + '\'' +
-				", sentLikes=" + sentLikes +
-				", receivedLikes=" + receivedLikes +
-				", createdAt=" + createdAt +
-				", updatedAt=" + updatedAt +
-				'}';
+	@Builder
+	public Card(User user, String gender, String nickname, Integer age, String job, String address, String introduction,
+				double distanceKm, String imagesUrl, String hobbies, String religion) {
+		this.user = user;
+		this.gender = gender;
+		this.nickname = nickname;
+		this.age = age;
+		this.job = job;
+		this.address = address;
+		this.introduction = introduction;
+		this.distanceKm = distanceKm;
+		this.imagesUrl = imagesUrl;
+		this.hobbies = hobbies;
+		this.religion = religion;
 	}
 }

@@ -22,7 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1")
 @RestController
 public class LikeController {
-
+	/**
+	 * likecontroller가 필요할까 ? cardcontroller에 종속시켜도 되지 않을까 ?
+	 */
 	private final LikeService likeService;
 	private final CardRepository cardRepository;
 

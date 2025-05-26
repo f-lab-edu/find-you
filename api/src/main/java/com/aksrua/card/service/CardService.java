@@ -27,7 +27,13 @@ public class CardService {
 	 * @Desc: 특정 시간마다 보여주는 10장의 소개팅 카드
 	 */
 	public List<Card> getCardList() {
-		//TODO: userId 를 통해 필터링 데이터를 조회한다.
+		/**
+		 *
+			TODO: 비즈니스 요구 조건에 맞춰서 해야 한다.
+		 1) userId 를 통해 필터링 데이터를 조회한다.
+		 2) 싫어요보냈던 카드는 다시 소개되지 않는다.
+		 3) 이성 카드만 조회 하도록
+		 */
 		return cardRepository.findTop10ByOrderByCreatedAtDesc();
 	}
 

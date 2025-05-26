@@ -64,11 +64,6 @@ public class CardController {
 
 	@GetMapping("/cards/liked/sent")
 	public ResponseEntity<List<CardResponseDto>> getSentLikedCards(@RequestBody CardRequestDto requestDto) {
-		/**
-		 * getCardsList() 와 같이 카드목록을 가지고 오는 DTO인데 DTO재활용 해도 괜찮을까 ?
-		 *
-		 * TODO: 인증 체계 활용(Access token)
-		 * */
 		List<CardResponseDto> responseDtoList = cardService.getSentLikedCards(requestDto.getCardId())
 				.stream()
 				.map(CardResponseDto::fromEntity)
@@ -77,11 +72,6 @@ public class CardController {
 		return ResponseEntity.status(HttpStatus.OK).body(responseDtoList);
 	}
 
-	/**
-	 * TODO: 인증 체계 활용(Access token)
-	 * @param requestDto
-	 * @return
-	 */
 	@GetMapping("/cards/liked/received")
 	public ResponseEntity<List<CardResponseDto>> getCardLikedByOthers(@RequestBody CardRequestDto requestDto) {
 		List<CardResponseDto> responseDtoList = cardService.getCardLikedByOthers(requestDto.getCardId())

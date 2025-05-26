@@ -33,14 +33,6 @@ public class CardController {
 
 	@PostMapping("/cards")
 	public ResponseEntity<CreateCardResponseDto> createCard(@RequestBody CreateCardRequestDto requestDto) {//TODO: 인증방식 도입
-		/**
-		QnA: user id를 갖고있는 클라이언트에서 request dto에 user id 를 포함해서 보내준다
-		controller에서 해당 user id로 조회한 user entity를 card entity 내부에 포함시켜
-		service 계층으로 이동하는게 적절한 설계인가 ?
-
-		1) 토큰방식으로 유저 아이디를 감추는 방식
-		2) x uid, x 유저 토큰,
-		 */
 		User joinedUser = userRepository.findById(requestDto.getUserId())
 				.orElseThrow(() -> new EntityNotFoundException("회원조회가 되지 않습니다."));
 
@@ -72,9 +64,6 @@ public class CardController {
 
 	@GetMapping("/cards/liked/sent")
 	public ResponseEntity<List<CardResponseDto>> getSentLikedCards(@RequestBody CardRequestDto requestDto) {
-		/**
-		 * getCardsList() 와 같이 카드목록을 가지고 오는 DTO인데 DTO재활용 해도 괜찮을까 ?
-		 * */
 		List<CardResponseDto> responseDtoList = cardService.getSentLikedCards(requestDto.getCardId())
 				.stream()
 				.map(CardResponseDto::fromEntity)

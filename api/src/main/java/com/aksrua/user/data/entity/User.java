@@ -39,6 +39,9 @@ public class User {
 	private String email;
 
 	@Column(nullable = false)
+	private String password;
+
+	@Column(nullable = false)
 	private String phoneNumber;
 
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -66,6 +69,13 @@ public class User {
 		this.email = email;
 		this.phoneNumber = phoneNumber;
 		this.card = card;
+	}
+
+	@Builder
+	public User(Long id, String email, String password) {
+		this.id = id;
+		this.email = email;
+		this.password = password;
 	}
 
 	@Builder

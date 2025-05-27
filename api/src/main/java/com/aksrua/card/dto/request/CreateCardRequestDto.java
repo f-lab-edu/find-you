@@ -21,6 +21,10 @@ public class CreateCardRequestDto {
 
 	private Integer age;
 
+	private Integer height;
+
+	private String bodyType; //TODO: ENUM
+
 	private String job;
 
 	private String address;

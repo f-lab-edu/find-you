@@ -25,3 +25,4 @@ data :
 ### TODO
 1. valid exception 과 custom exception 통일
 2. test code 작성
+3. dummy data 생성 쿼리 작성

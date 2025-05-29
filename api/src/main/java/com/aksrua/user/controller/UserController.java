@@ -26,6 +26,8 @@ public class UserController {
 	public ResponseEntity<SignupResponseDto> signup(@RequestBody @Valid SignupRequestDto requestDto) {
 		User user = User.builder()
 				.username(requestDto.getUsername())
+				.gender(requestDto.getGender())
+				.birthDate(requestDto.getBirthDate())
 				.email(requestDto.getEmail())
 				.password(requestDto.getPassword())//TODO: password encode
 				.phoneNumber(requestDto.getPhoneNumber())

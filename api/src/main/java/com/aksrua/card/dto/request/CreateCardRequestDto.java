@@ -1,5 +1,7 @@
 package com.aksrua.card.dto.request;
 
+import com.aksrua.card.data.entity.BodyType;
+import com.aksrua.card.data.entity.Religion;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,15 +17,13 @@ public class CreateCardRequestDto {
 
 	private Long userId;
 
-	private String gender;
-
 	private String nickname;
 
 	private Integer age;
 
 	private Integer height;
 
-	private String bodyType; //TODO: ENUM
+	private BodyType bodyType;
 
 	private String job;
 
@@ -31,5 +31,5 @@ public class CreateCardRequestDto {
 
 	private String introduction;
 
-	private String religion;
+	private Religion religion;
 }

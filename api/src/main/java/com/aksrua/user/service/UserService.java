@@ -3,16 +3,12 @@ package com.aksrua.user.service;
 import com.aksrua.common.exception.DuplicateResourceException;
 import com.aksrua.user.data.entity.User;
 import com.aksrua.user.data.repository.UserRepository;
-import com.aksrua.user.dto.response.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UserService implements UserDetailsService {
+public class UserService {
 
 	private final UserRepository userRepository;
 
@@ -24,15 +20,5 @@ public class UserService implements UserDetailsService {
 		}
 
 		return userRepository.save(user);
-	}
-
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = userRepository.findByEmail(username);
-
-		if (user != null) {
-			return new CustomUserDetails(user);
-		}
-		return null;
 	}
 }

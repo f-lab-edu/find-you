@@ -1,20 +1,16 @@
 package com.aksrua.card.data.entity;
 
-import com.aksrua.like.data.entity.Like;
 import com.aksrua.user.data.entity.User;
+import com.querydsl.core.annotations.QueryProjection;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,10 +24,10 @@ import lombok.NoArgsConstructor;
 public class Card {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@OneToOne
+	@MapsId
 	@JoinColumn(name = "user_id")
 	private User user;
 
@@ -43,6 +39,12 @@ public class Card {
 
 	@Column(nullable = false)
 	private Integer age;
+
+	@Column(nullable = false)
+	private Integer height;
+
+	@Column(nullable = false)
+	private String bodyType;
 
 	@Column(nullable = false)
 	private String job;
@@ -61,14 +63,6 @@ public class Card {
 
 	private String religion;
 
-	@Builder.Default
-	@OneToMany(mappedBy = "senderCard")
-	private List<Like> sentLikes = new ArrayList<>();
-
-	@Builder.Default
-	@OneToMany(mappedBy = "receiverCard")
-	private List<Like> receivedLikes = new ArrayList<>();
-
 	private LocalDateTime createdAt;
 
 	private LocalDateTime updatedAt;
@@ -85,12 +79,29 @@ public class Card {
 	}
 
 	@Builder
-	public Card(User user, String gender, String nickname, Integer age, String job, String address, String introduction,
+	public Card(String gender, String nickname, Integer age, String job, String address, String introduction,
 				double distanceKm, String imagesUrl, String hobbies, String religion) {
-		this.user = user;
 		this.gender = gender;
 		this.nickname = nickname;
 		this.age = age;
+		this.job = job;
+		this.address = address;
+		this.introduction = introduction;
+		this.distanceKm = distanceKm;
+		this.imagesUrl = imagesUrl;
+		this.hobbies = hobbies;
+		this.religion = religion;
+	}
+
+	@QueryProjection
+	public Card(String gender, String nickname, Integer age, Integer height, String bodyType, String job,
+				String address,
+				String introduction, double distanceKm, String imagesUrl, String hobbies, String religion) {
+		this.gender = gender;
+		this.nickname = nickname;
+		this.age = age;
+		this.height = height;
+		this.bodyType = bodyType;
 		this.job = job;
 		this.address = address;
 		this.introduction = introduction;

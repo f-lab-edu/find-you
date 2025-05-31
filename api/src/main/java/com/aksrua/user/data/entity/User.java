@@ -1,7 +1,7 @@
 package com.aksrua.user.data.entity;
 
 import com.aksrua.card.data.entity.Card;
-import jakarta.persistence.CascadeType;
+import com.aksrua.filter.data.entity.Filter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -20,7 +20,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Getter
-@ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -44,8 +43,11 @@ public class User {
 	@Column(nullable = false)
 	private String phoneNumber;
 
-	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
 	private Card card;
+
+	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+	private Filter filter;
 
 	private LocalDateTime createdAt;
 
@@ -63,12 +65,11 @@ public class User {
 	}
 
 	@Builder
-	public User(Long id, String username, String email, String phoneNumber, Card card) {
+	public User(Long id, String username, String email, String phoneNumber) {
 		this.id = id;
 		this.username = username;
 		this.email = email;
 		this.phoneNumber = phoneNumber;
-		this.card = card;
 	}
 
 	@Builder

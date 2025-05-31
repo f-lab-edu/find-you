@@ -4,6 +4,8 @@ import com.aksrua.user.data.entity.User;
 import com.querydsl.core.annotations.QueryProjection;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
@@ -31,9 +33,6 @@ public class Card {
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	@Column(nullable = false)
-	private String gender;
-
 	@Column(unique = true, nullable = false)
 	private String nickname;
 
@@ -44,7 +43,8 @@ public class Card {
 	private Integer height;
 
 	@Column(nullable = false)
-	private String bodyType;
+	@Enumerated(EnumType.STRING)
+	private BodyType bodyType;
 
 	@Column(nullable = false)
 	private String job;
@@ -55,13 +55,13 @@ public class Card {
 	@Column(nullable = false)
 	private String introduction;
 
-	private double distanceKm;
-
 	private String imagesUrl;
 
 	private String hobbies;
 
-	private String religion;
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private Religion religion;
 
 	private LocalDateTime createdAt;
 
@@ -79,25 +79,21 @@ public class Card {
 	}
 
 	@Builder
-	public Card(String gender, String nickname, Integer age, String job, String address, String introduction,
-				double distanceKm, String imagesUrl, String hobbies, String religion) {
-		this.gender = gender;
+	public Card(String nickname, Integer age, String job, String address, String introduction,
+				String imagesUrl, String hobbies, Religion religion) {
 		this.nickname = nickname;
 		this.age = age;
 		this.job = job;
 		this.address = address;
 		this.introduction = introduction;
-		this.distanceKm = distanceKm;
 		this.imagesUrl = imagesUrl;
 		this.hobbies = hobbies;
 		this.religion = religion;
 	}
 
 	@QueryProjection
-	public Card(String gender, String nickname, Integer age, Integer height, String bodyType, String job,
-				String address,
-				String introduction, double distanceKm, String imagesUrl, String hobbies, String religion) {
-		this.gender = gender;
+	public Card(String nickname, Integer age, Integer height, BodyType bodyType, String job, String address,
+				String introduction, String imagesUrl, String hobbies, Religion religion) {
 		this.nickname = nickname;
 		this.age = age;
 		this.height = height;
@@ -105,7 +101,6 @@ public class Card {
 		this.job = job;
 		this.address = address;
 		this.introduction = introduction;
-		this.distanceKm = distanceKm;
 		this.imagesUrl = imagesUrl;
 		this.hobbies = hobbies;
 		this.religion = religion;

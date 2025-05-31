@@ -21,4 +21,9 @@ public class UserService {
 
 		return userRepository.save(user);
 	}
+
+	public User getUserDetail(Long userId) {
+		return userRepository.findById(userId)
+				.orElseThrow(IllegalArgumentException::new);
+	}
 }

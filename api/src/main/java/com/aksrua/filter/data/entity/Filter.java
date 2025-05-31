@@ -1,5 +1,6 @@
 package com.aksrua.filter.data.entity;
 
+
 import com.aksrua.card.data.entity.BodyType;
 import com.aksrua.card.data.entity.Religion;
 import com.aksrua.user.data.entity.User;

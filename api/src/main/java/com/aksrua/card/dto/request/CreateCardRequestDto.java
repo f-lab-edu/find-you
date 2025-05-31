@@ -1,5 +1,6 @@
 package com.aksrua.card.dto.request;
 
+
 import com.aksrua.card.data.entity.BodyType;
 import com.aksrua.card.data.entity.Religion;
 import lombok.AllArgsConstructor;

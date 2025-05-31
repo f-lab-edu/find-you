@@ -3,12 +3,14 @@ package com.aksrua.card.controller;
 import com.aksrua.card.data.entity.BodyType;
 import com.aksrua.card.data.entity.Card;
 import com.aksrua.card.data.entity.Religion;
+
 import com.aksrua.card.dto.request.CardRequestDto;
 import com.aksrua.card.dto.request.CreateCardRequestDto;
 import com.aksrua.card.dto.response.CardResponseDto;
 import com.aksrua.card.dto.response.CreateCardResponseDto;
 import com.aksrua.card.service.CardService;
 import com.aksrua.filter.data.entity.Filter;
+
 import com.aksrua.user.data.entity.User;
 import com.aksrua.user.data.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -40,6 +42,7 @@ public class CardController {
 
 		Card card = Card.builder()
 				.user(joinedUser)
+				.gender(requestDto.getGender())
 				.nickname(requestDto.getNickname())
 				.age(requestDto.getAge())
 				.height(requestDto.getHeight())

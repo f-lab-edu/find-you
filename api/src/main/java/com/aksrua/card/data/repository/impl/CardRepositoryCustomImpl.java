@@ -1,5 +1,6 @@
 package com.aksrua.card.data.repository.impl;
 
+
 import com.aksrua.card.data.entity.BodyType;
 import com.aksrua.card.data.entity.QCard;
 import com.aksrua.card.data.entity.Religion;

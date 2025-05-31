@@ -1,21 +1,13 @@
-package com.aksrua.card.dto.request;
-
+package com.aksrua.card.data.repository.dto.response;
 
 import com.aksrua.card.data.entity.BodyType;
 import com.aksrua.card.data.entity.Religion;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
 
-@Builder
-@Getter
-@ToString
-@NoArgsConstructor
 @AllArgsConstructor
-public class CreateCardRequestDto {
-
+@Getter
+public class CardResponseDto {
 	private Long userId;
 
 	private String nickname;
@@ -31,6 +23,8 @@ public class CreateCardRequestDto {
 	private String address;
 
 	private String introduction;
+
+	private String imagesUrl;
 
 	private Religion religion;
 }

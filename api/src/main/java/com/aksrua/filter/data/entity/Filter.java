@@ -1,9 +1,14 @@
 package com.aksrua.filter.data.entity;
 
+
+import com.aksrua.card.data.entity.BodyType;
+import com.aksrua.card.data.entity.Religion;
 import com.aksrua.user.data.entity.User;
 import com.querydsl.core.annotations.QueryProjection;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,6 +25,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.DynamicInsert;
+import org.springframework.http.StreamingHttpOutputMessage.Body;
 
 @ToString
 @Getter
@@ -39,23 +45,25 @@ public class Filter {
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	@Column(nullable = false, columnDefinition = "INT DEFAULT 20")
+	@Column(nullable = false)
 	private Integer minAge;
 
-	@Column(nullable = false, columnDefinition = "INT DEFAULT 40")
+	@Column(nullable = false)
 	private Integer maxAge;
 
-	@Column(nullable = false, columnDefinition = "INT DEFAULT 150")
+	@Column(nullable = false)
 	private Integer minHeight;
 
-	@Column(nullable = false, columnDefinition = "INT DEFAULT 180")
+	@Column(nullable = false)
 	private Integer maxHeight;
 
-	@Column(nullable = false, columnDefinition = "VARCHAR(255) DEFAULT 'NORMAL'")
-	private String bodyType; //TODO: enum
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private BodyType bodyType;
 
-	@Column(nullable = false, columnDefinition = "VARCHAR(255) DEFAULT 'NONE'")
-	private String religion;
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private Religion religion;
 
 	private LocalDateTime createdAt;
 
@@ -79,8 +87,8 @@ public class Filter {
 
 	@QueryProjection
 	public Filter(Integer minAge, Integer maxAge, Integer minHeight, Integer maxHeight,
-				  String bodyType,
-				  String religion) {
+				  BodyType bodyType,
+				  Religion religion) {
 		this.minAge = minAge;
 		this.maxAge = maxAge;
 		this.minHeight = minHeight;

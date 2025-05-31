@@ -1,6 +1,7 @@
 package com.aksrua.card.dto.response;
 
 import com.aksrua.card.data.entity.Card;
+import com.aksrua.card.data.entity.Religion;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -11,8 +12,6 @@ public class CardResponseDto {
 	private Long id;
 
 	private Long userId;
-
-	private String gender;
 
 	private String nickname;
 
@@ -30,19 +29,17 @@ public class CardResponseDto {
 
 	private String hobbies;
 
-	private String religion;
+	private Religion religion;
 
 	public static CardResponseDto fromEntity(Card card) {
 		return CardResponseDto.builder()
 				.id(card.getId())
 				.userId(card.getUser().getId())
-				.gender(card.getGender())
 				.nickname(card.getNickname())
 				.age(card.getAge())
 				.job(card.getJob())
 				.address(card.getAddress())
 				.introduction(card.getIntroduction())
-				.distanceKm(card.getDistanceKm())
 				.imagesUrl(card.getImagesUrl())
 				.hobbies(card.getHobbies())
 				.religion(card.getReligion())

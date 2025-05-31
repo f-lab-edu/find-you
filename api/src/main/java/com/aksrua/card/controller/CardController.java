@@ -1,11 +1,16 @@
 package com.aksrua.card.controller;
 
+import com.aksrua.card.data.entity.BodyType;
 import com.aksrua.card.data.entity.Card;
+import com.aksrua.card.data.entity.Religion;
+
 import com.aksrua.card.dto.request.CardRequestDto;
 import com.aksrua.card.dto.request.CreateCardRequestDto;
 import com.aksrua.card.dto.response.CardResponseDto;
 import com.aksrua.card.dto.response.CreateCardResponseDto;
 import com.aksrua.card.service.CardService;
+import com.aksrua.filter.data.entity.Filter;
+
 import com.aksrua.user.data.entity.User;
 import com.aksrua.user.data.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -31,7 +36,7 @@ public class CardController {
 	private final UserRepository userRepository;
 
 	@PostMapping("/cards")
-	public ResponseEntity<CreateCardResponseDto> createCard(@RequestBody CreateCardRequestDto requestDto) {//TODO: 인증방식 도입
+	public ResponseEntity<CreateCardResponseDto> createCardAndSetFilter(@RequestBody CreateCardRequestDto requestDto) {//TODO: 인증방식 도입
 		User joinedUser = userRepository.findById(requestDto.getUserId())
 				.orElseThrow(() -> new EntityNotFoundException("회원조회가 되지 않습니다."));
 
@@ -48,25 +53,23 @@ public class CardController {
 				.religion(requestDto.getReligion())
 				.build();
 
-		Card createdCard = cardService.createCard(card, joinedUser);
+		Filter filter = Filter.builder()
+				.user(joinedUser)
+				.minAge(20)
+				.maxAge(40)
+				.minHeight(150)
+				.maxHeight(200)
+				.bodyType(BodyType.ANY)
+				.religion(Religion.ANY)
+				.build();
 
+		Card createdCard = cardService.createCardAndSetFilter(card, filter);
 		return ResponseEntity.status(HttpStatus.CREATED).body(CreateCardResponseDto.fromEntity(createdCard));
 	}
 
 	@GetMapping("/cards")
 	public ResponseEntity<List<?>> getCardsList(@RequestParam Long userId) {
-//	public ResponseEntity<List<CardResponseDto>> getCardsList(@RequestParam Long userId) {
-
-		/*
-		List<CardResponseDto> responseDtoList = cardService.getCardList()
-				.stream()
-				.map(CardResponseDto::fromEntity)
-				.collect(Collectors.toList());
-
-		 */
-		List<Card> findCardList = cardService.getCardList(userId);
-
-		return ResponseEntity.status(HttpStatus.OK).body(findCardList);
+		return ResponseEntity.status(HttpStatus.OK).body(cardService.getCardList(userId));
 	}
 
 	@GetMapping("/cards/liked/sent")

@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class CardResponseDto {
+public class CardListResponseDto {
 	private Long userId;
 
 	private String nickname;

@@ -2,7 +2,7 @@ package com.aksrua.card.service;
 
 import com.aksrua.card.data.entity.Card;
 import com.aksrua.card.data.repository.CardRepository;
-import com.aksrua.card.data.repository.dto.response.CardResponseDto;
+import com.aksrua.card.data.repository.dto.response.CardListResponseDto;
 import com.aksrua.common.exception.DuplicateResourceException;
 import com.aksrua.filter.data.entity.Filter;
 import com.aksrua.filter.service.FilterService;
@@ -41,15 +41,12 @@ public class CardService {
 	/**
 	 * @return Card list 10장
 	 * @Desc: 특정 시간마다 보여주는 10장의 소개팅 카드
+	 * 	TODO: 비즈니스 요구 조건에 맞춰서 해야 한다.
+	 * 		 1) userId 를 통해 필터링 데이터를 조회한다.
+	 * 		 2) 싫어요보냈던 카드는 다시 소개되지 않는다.
+	 * 		 3) 이성 카드만 조회 하도록
 	 */
-	public List<CardResponseDto> getCardList(Long userId) {
-		/**
-		 *
-		 TODO: 비즈니스 요구 조건에 맞춰서 해야 한다.
-		 1) userId 를 통해 필터링 데이터를 조회한다.
-		 2) 싫어요보냈던 카드는 다시 소개되지 않는다.
-		 3) 이성 카드만 조회 하도록
-		 */
+	public List<CardListResponseDto> getCardList(Long userId) {
 		return cardRepository.findCardsByUserFilter(userId);
 	}
 

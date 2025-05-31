@@ -5,7 +5,7 @@ import com.aksrua.card.data.entity.BodyType;
 import com.aksrua.card.data.entity.QCard;
 import com.aksrua.card.data.entity.Religion;
 import com.aksrua.card.data.repository.CardRepositoryCustom;
-import com.aksrua.card.data.repository.dto.response.CardResponseDto;
+import com.aksrua.card.data.repository.dto.response.CardListResponseDto;
 import com.aksrua.filter.data.entity.Filter;
 import com.aksrua.filter.data.entity.QFilter;
 import com.aksrua.user.data.entity.QUser;
@@ -28,7 +28,7 @@ public class CardRepositoryCustomImpl implements CardRepositoryCustom {
 	}
 
 	@Override
-	public List<CardResponseDto> findCardsByUserFilter(Long userId) {
+	public List<CardListResponseDto> findCardsByUserFilter(Long userId) {
 		QFilter filter = QFilter.filter;
 		QCard card = QCard.card;
 		QUser user = QUser.user;
@@ -57,7 +57,7 @@ public class CardRepositoryCustomImpl implements CardRepositoryCustom {
 		}
 
 		return queryFactory
-				.select(Projections.constructor(CardResponseDto.class,
+				.select(Projections.constructor(CardListResponseDto.class,
 						user.id, card.nickname, card.age, card.height, card.bodyType, card.job, card.address, card.introduction, card.imagesUrl, card.religion))
 				.from(card)
 				.join(card.user, user)

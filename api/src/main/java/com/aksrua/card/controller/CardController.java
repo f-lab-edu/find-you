@@ -10,7 +10,6 @@ import com.aksrua.user.data.entity.User;
 import com.aksrua.user.data.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class CardController {
 
 	private final CardService cardService;
-
 	private final UserRepository userRepository;
 
 	@PostMapping("/cards")
@@ -41,29 +40,42 @@ public class CardController {
 				.gender(requestDto.getGender())
 				.nickname(requestDto.getNickname())
 				.age(requestDto.getAge())
+				.height(requestDto.getHeight())
+				.bodyType(requestDto.getBodyType())
 				.job(requestDto.getJob())
 				.address(requestDto.getAddress())
 				.introduction(requestDto.getIntroduction())
 				.religion(requestDto.getReligion())
 				.build();
 
-		Card createdCard = cardService.createCard(card);
+		Card createdCard = cardService.createCard(card, joinedUser);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(CreateCardResponseDto.fromEntity(createdCard));
 	}
 
 	@GetMapping("/cards")
-	public ResponseEntity<List<CardResponseDto>> getCardsList() {
+	public ResponseEntity<List<?>> getCardsList(@RequestParam Long userId) {
+//	public ResponseEntity<List<CardResponseDto>> getCardsList(@RequestParam Long userId) {
+
+		/*
 		List<CardResponseDto> responseDtoList = cardService.getCardList()
 				.stream()
 				.map(CardResponseDto::fromEntity)
 				.collect(Collectors.toList());
 
-		return ResponseEntity.status(HttpStatus.OK).body(responseDtoList);
+		 */
+		List<Card> findCardList = cardService.getCardList(userId);
+
+		return ResponseEntity.status(HttpStatus.OK).body(findCardList);
 	}
 
 	@GetMapping("/cards/liked/sent")
 	public ResponseEntity<List<CardResponseDto>> getSentLikedCards(@RequestBody CardRequestDto requestDto) {
+		/**
+		 * getCardsList() 와 같이 카드목록을 가지고 오는 DTO인데 DTO재활용 해도 괜찮을까 ?
+		 *
+		 * TODO: 인증 체계 활용(Access token)
+		 * */
 		List<CardResponseDto> responseDtoList = cardService.getSentLikedCards(requestDto.getCardId())
 				.stream()
 				.map(CardResponseDto::fromEntity)
@@ -72,6 +84,11 @@ public class CardController {
 		return ResponseEntity.status(HttpStatus.OK).body(responseDtoList);
 	}
 
+	/**
+	 * TODO: 인증 체계 활용(Access token)
+	 * @param requestDto
+	 * @return
+	 */
 	@GetMapping("/cards/liked/received")
 	public ResponseEntity<List<CardResponseDto>> getCardLikedByOthers(@RequestBody CardRequestDto requestDto) {
 		List<CardResponseDto> responseDtoList = cardService.getCardLikedByOthers(requestDto.getCardId())

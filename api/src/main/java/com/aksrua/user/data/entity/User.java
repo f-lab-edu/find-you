@@ -41,7 +41,7 @@ public class User {
 	@Enumerated(EnumType.STRING)
 	private Gender gender;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@Column(nullable = false)
 	private LocalDate birthDate;
 

@@ -16,15 +16,12 @@ public class CreateCardResponseDto {
 
 	private Long userId;
 
-	private String gender;
-
 	private String nickname;
 
 	public static CreateCardResponseDto fromEntity(Card card) {
 		return CreateCardResponseDto.builder()
 				.id(card.getId())
 				.userId(card.getUser().getId())
-				.gender(card.getGender())
 				.nickname(card.getNickname())
 				.build();
 	}

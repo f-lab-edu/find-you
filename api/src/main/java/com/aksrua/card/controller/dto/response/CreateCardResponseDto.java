@@ -1,4 +1,4 @@
-package com.aksrua.card.dto.response;
+package com.aksrua.card.controller.dto.response;
 
 import com.aksrua.card.data.entity.Card;
 import lombok.AllArgsConstructor;

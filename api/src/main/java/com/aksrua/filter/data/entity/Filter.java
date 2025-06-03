@@ -2,6 +2,7 @@ package com.aksrua.filter.data.entity;
 
 import com.aksrua.card.data.entity.BodyType;
 import com.aksrua.card.data.entity.Religion;
+import com.aksrua.common.entity.BaseEntity;
 import com.aksrua.user.data.entity.User;
 import com.querydsl.core.annotations.QueryProjection;
 import jakarta.persistence.Column;
@@ -23,7 +24,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.DynamicInsert;
 
-@ToString
 @Getter
 @Table(name = "CARD_FILTER")
 @Builder
@@ -31,7 +31,7 @@ import org.hibernate.annotations.DynamicInsert;
 @NoArgsConstructor
 @DynamicInsert
 @Entity
-public class Filter {
+public class Filter extends BaseEntity {
 
 	@Id
 	private Long id;
@@ -60,21 +60,6 @@ public class Filter {
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private Religion religion;
-
-	private LocalDateTime createdAt;
-
-	private LocalDateTime updatedAt;
-
-	@PrePersist
-	protected void onCreate() {
-		this.createdAt = LocalDateTime.now();
-		this.updatedAt = LocalDateTime.now();
-	}
-
-	@PreUpdate
-	protected void onUpdate() {
-		this.updatedAt = LocalDateTime.now();
-	}
 
 	@Builder
 	public Filter(User user) {

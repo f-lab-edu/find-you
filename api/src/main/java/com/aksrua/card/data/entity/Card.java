@@ -1,5 +1,6 @@
 package com.aksrua.card.data.entity;
 
+import com.aksrua.common.entity.BaseEntity;
 import com.aksrua.user.data.entity.User;
 import com.querydsl.core.annotations.QueryProjection;
 import jakarta.persistence.Column;
@@ -10,9 +11,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,7 +21,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Card {
+public class Card extends BaseEntity {
 
 	@Id
 	private Long id;
@@ -62,21 +60,6 @@ public class Card {
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private Religion religion;
-
-	private LocalDateTime createdAt;
-
-	private LocalDateTime updatedAt;
-
-	@PrePersist
-	protected void onCreate() {
-		this.createdAt = LocalDateTime.now();
-		this.updatedAt = LocalDateTime.now();
-	}
-
-	@PreUpdate
-	protected void onUpdate() {
-		this.updatedAt = LocalDateTime.now();
-	}
 
 	@Builder
 	public Card(String nickname, Integer age, String job, String address, String introduction,

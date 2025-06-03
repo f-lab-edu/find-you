@@ -1,0 +1,18 @@
+### 2025 06 03
+- [X] dto package 라인 수정 -> controller 이하
+- [X] 응답 메시지 통일
+- [ ] Base Entity 도입
+- [X] DTO, Entity 편의 method 생성
+- [X] created at 과 별개의 registered at 이라는 데이터 생성
+- [ ] enum (gender 및 종교)
+  - [ ] body type 남, 여 구분하여 받기
+- [ ] filter 초기값 없애기
+- [ ] Query DSL return 값이 현재 DTO다 -> DB와 통신하는곳에서 DTO 반환 ?
+- [ ] 인증인가
+  - [ ] token 발급 및 유저 검증
+  - [ ] 비밀번호 암호화
+- [ ] 닉네임 중복체크 (분산캐시 및 레디스)
+- [ ] Spring Boot 테스트 Service mock 대체
+- [ ] message 코드화
+- [ ] 테스트코드 작성
+- [ ] README md 작성

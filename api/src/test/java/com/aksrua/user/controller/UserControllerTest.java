@@ -12,32 +12,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.aksrua.card.controller.dto.request.CreateCardRequestDto;
-import com.aksrua.card.controller.dto.response.CreateCardResponseDto;
-import com.aksrua.common.dto.ApiResponse;
 import com.aksrua.common.exception.DuplicateResourceException;
 import com.aksrua.user.controller.dto.request.SignupRequestDto;
-import com.aksrua.user.controller.dto.response.SignupResponseDto;
-import com.aksrua.user.data.entity.Gender;
 import com.aksrua.user.data.entity.User;
 import com.aksrua.user.service.UserService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 @ActiveProfiles("test")
 @WebMvcTest(controllers = UserController.class)
@@ -67,12 +55,12 @@ class UserControllerTest {
 
 		User mockUser = User.builder()
 				.id(1L)
-				.username("김이름")
-				.gender(MALE)
-				.birthDate(LocalDate.parse("1992-02-14"))
-				.email("testzmail@zmail.com")
-				.password("1234")
-				.phoneNumber("010-5928-9203")
+				.username(requestDto.getUsername())
+				.gender(requestDto.getGender())
+				.birthDate(requestDto.getBirthDate())
+				.email(requestDto.getEmail())
+				.password(requestDto.getPassword())
+				.phoneNumber(requestDto.getPhoneNumber())
 				.build();
 
 		when(userService.signup(any(User.class))).thenReturn(mockUser);
@@ -138,7 +126,7 @@ class UserControllerTest {
 
 		when(userService.getUserDetail(userId)).thenReturn(mockUser);
 
-		// then
+		// when && then
 		mockMvc.perform(
 						get("/api/v1/users/{userId}", userId)
 				)

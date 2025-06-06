@@ -1,12 +1,12 @@
 package com.aksrua.user.service;
 
-import static com.aksrua.user.data.entity.Gender.FEMALE;
 import static com.aksrua.user.data.entity.Gender.MALE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.BDDMockito.*;
-
+import static org.mockito.BDDMockito.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.never;
+import static org.mockito.BDDMockito.verify;
 
 import com.aksrua.common.exception.DuplicateResourceException;
 import com.aksrua.user.data.entity.User;

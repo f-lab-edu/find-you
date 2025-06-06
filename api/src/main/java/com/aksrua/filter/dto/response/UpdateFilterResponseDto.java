@@ -8,7 +8,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class CreateFilterResponseDto {
+public class UpdateFilterResponseDto {
 
 	private Long userId;
 
@@ -24,15 +24,15 @@ public class CreateFilterResponseDto {
 
 	private Religion religion;
 
-	public static CreateFilterResponseDto fromEntity(Filter savedFilter) {
-		return CreateFilterResponseDto.builder()
-				.userId(savedFilter.getId())
-				.minAge(savedFilter.getMinAge())
-				.maxAge(savedFilter.getMaxAge())
-				.minHeight(savedFilter.getMinHeight())
-				.maxHeight(savedFilter.getMaxHeight())
-				.bodyType(savedFilter.getBodyType())
-				.religion(savedFilter.getReligion())
+	public static UpdateFilterResponseDto fromEntity(Filter updateFilter) {
+		return UpdateFilterResponseDto.builder()
+				.userId(updateFilter.getId())
+				.minAge(updateFilter.getMinAge())
+				.maxAge(updateFilter.getMaxAge())
+				.minHeight(updateFilter.getMinHeight())
+				.maxHeight(updateFilter.getMaxHeight())
+				.bodyType(updateFilter.getBodyType())
+				.religion(updateFilter.getReligion())
 				.build();
 	}
 }

@@ -5,7 +5,6 @@ import com.aksrua.card.data.entity.Religion;
 import com.aksrua.common.entity.BaseEntity;
 import com.aksrua.user.data.entity.User;
 import com.querydsl.core.annotations.QueryProjection;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -13,15 +12,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.hibernate.annotations.DynamicInsert;
 
 @Getter
@@ -41,23 +36,17 @@ public class Filter extends BaseEntity {
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	@Column(nullable = false)
 	private Integer minAge;
 
-	@Column(nullable = false)
 	private Integer maxAge;
 
-	@Column(nullable = false)
 	private Integer minHeight;
 
-	@Column(nullable = false)
 	private Integer maxHeight;
 
-	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private BodyType bodyType;
 
-	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private Religion religion;
 
@@ -67,14 +56,25 @@ public class Filter extends BaseEntity {
 	}
 
 	@QueryProjection
-	public Filter(Integer minAge, Integer maxAge, Integer minHeight, Integer maxHeight,
+	public Filter(User user, Integer minAge, Integer maxAge, Integer minHeight, Integer maxHeight,
 				  BodyType bodyType,
 				  Religion religion) {
+		this.user = user;
 		this.minAge = minAge;
 		this.maxAge = maxAge;
 		this.minHeight = minHeight;
 		this.maxHeight = maxHeight;
 		this.bodyType = bodyType;
 		this.religion = religion;
+	}
+
+	public void updateFilter(Filter updateFilter) {
+		this.user = updateFilter.getUser();
+		this.minAge = updateFilter.getMinAge();
+		this.maxAge = updateFilter.getMaxAge();
+		this.minHeight = updateFilter.getMinHeight();
+		this.maxHeight = updateFilter.getMaxHeight();
+		this.bodyType = updateFilter.getBodyType();
+		this.religion = updateFilter.getReligion();
 	}
 }

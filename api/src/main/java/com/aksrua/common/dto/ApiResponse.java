@@ -5,7 +5,8 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public class ApiResponse<T> {
-//TODO: LIST형태의 data를 반환할때는 length값도 포함해서 줄 수 있지않을까 ?
+
+	//TODO: LIST형태의 data를 반환할때는 length값도 포함해서 줄 수 있지않을까 ?
 	private int code;
 	private HttpStatus status;
 	private String message;

@@ -27,7 +27,6 @@ import lombok.NoArgsConstructor;
 @Entity
 public class User extends BaseEntity {
 
-	//TODO: user 마지막 접속일시로 최근 접속일 기록하기
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -52,6 +51,8 @@ public class User extends BaseEntity {
 	@Column(nullable = false)
 	private String phoneNumber;
 
+	//TODO: user 마지막 접속일시로 최근 접속일 기록하기
+	//TODO: user 가입일자로 '최근 가입한 사람' 필터링 해주기 위한 데이터
 	@Column(nullable = false)
 	private LocalDateTime registeredAt;
 
@@ -62,28 +63,6 @@ public class User extends BaseEntity {
 	//	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
 	@OneToOne(mappedBy = "user")
 	private Filter filter;
-
-	@Builder
-	public User(Long id, String username, String email, String phoneNumber) {
-		this.id = id;
-		this.username = username;
-		this.email = email;
-		this.phoneNumber = phoneNumber;
-	}
-
-	@Builder
-	public User(Long id, String email, String password) {
-		this.id = id;
-		this.email = email;
-		this.password = password;
-	}
-
-	@Builder
-	public User(String username, String email, String phoneNumber) {
-		this.username = username;
-		this.email = email;
-		this.phoneNumber = phoneNumber;
-	}
 
 	@QueryProjection
 	public User(Gender gender) {

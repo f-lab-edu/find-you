@@ -24,6 +24,10 @@ public class UserService {
 
 	public User getUserDetail(Long userId) {
 		return userRepository.findById(userId)
-				.orElseThrow(IllegalArgumentException::new);
+				.orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
+	}
+
+	public User getReferenceById(Long userId) {
+		return userRepository.getReferenceById(userId);
 	}
 }

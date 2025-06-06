@@ -26,7 +26,7 @@ public class SignupRequestDto {
 	//TODO: enum 값 validation 해야함. 만약에 3으로 들어오면 exception 발생
 	private Gender gender;
 
-	@NotNull(message = "생년월일은 입력해주세요.")
+	@NotNull(message = "생년월일을 입력해주세요.")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd")
 	private LocalDate birthDate;
 

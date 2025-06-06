@@ -5,7 +5,6 @@ import com.aksrua.card.data.entity.Card;
 import com.aksrua.card.data.entity.Religion;
 import com.aksrua.user.data.entity.User;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import java.time.LocalDate;
@@ -33,13 +32,13 @@ public class CreateCardRequestDto {
 	@NotNull(message = "체형을 입력해주세요.")
 	private BodyType bodyType;
 
-	@NotEmpty(message = "직업을 입력해주세요.")
+	@NotBlank(message = "직업을 입력해주세요.")
 	private String job;
 
-	@NotEmpty(message = "주소를 입력해주세요.")
+	@NotBlank(message = "주소를 입력해주세요.")
 	private String address;
 
-	@NotEmpty(message = "자기소개를 입력해주세요.")
+	@NotBlank(message = "자기소개를 입력해주세요.")
 	private String introduction;
 
 	@NotNull(message = "종교를 입력해주세요.")
@@ -49,7 +48,7 @@ public class CreateCardRequestDto {
 		return Card.builder()
 				.user(joinedUser)
 				.nickname(nickname)
-				.age(getUserAge(joinedUser.getBirthDate()))
+				.age(calculateUserAge(joinedUser.getBirthDate()))
 				.height(height)
 				.bodyType(bodyType)
 				.job(job)
@@ -59,18 +58,14 @@ public class CreateCardRequestDto {
 				.build();
 	}
 
-	private Integer getUserAge(LocalDate birthDate) {
+	private Integer calculateUserAge(LocalDate birthDate) {
 		LocalDate now = LocalDate.now();
 
-		// 년도 차이 계산
 		int age = now.getYear() - birthDate.getYear();
-
-		// 생일이 아직 지나지 않았으면 나이에서 1을 뺌
 		if (now.getMonthValue() < birthDate.getMonthValue() ||
 				(now.getMonthValue() == birthDate.getMonthValue() && now.getDayOfMonth() < birthDate.getDayOfMonth())) {
 			age--;
 		}
-
 		return age;
 	}
 }

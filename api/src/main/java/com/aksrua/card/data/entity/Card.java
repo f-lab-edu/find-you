@@ -75,8 +75,9 @@ public class Card extends BaseEntity {
 	}
 
 	@QueryProjection
-	public Card(String nickname, Integer age, Integer height, BodyType bodyType, String job, String address,
-				String introduction, String imagesUrl, String hobbies, Religion religion) {
+	public Card(User user, String nickname, Integer age, Integer height, BodyType bodyType, String job, String address,
+				String introduction, String imagesUrl, Religion religion) {
+		this.user = user;
 		this.nickname = nickname;
 		this.age = age;
 		this.height = height;
@@ -85,7 +86,6 @@ public class Card extends BaseEntity {
 		this.address = address;
 		this.introduction = introduction;
 		this.imagesUrl = imagesUrl;
-		this.hobbies = hobbies;
 		this.religion = religion;
 	}
 }

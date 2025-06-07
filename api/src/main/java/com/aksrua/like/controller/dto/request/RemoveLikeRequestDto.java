@@ -1,4 +1,4 @@
-package com.aksrua.like.dto.request;
+package com.aksrua.like.controller.dto.request;
 
 public class RemoveLikeRequestDto {
 

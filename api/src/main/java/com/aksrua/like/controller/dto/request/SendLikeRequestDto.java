@@ -1,4 +1,4 @@
-package com.aksrua.like.dto.request;
+package com.aksrua.like.controller.dto.request;
 
 import lombok.Builder;
 import lombok.Getter;

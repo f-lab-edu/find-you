@@ -1,6 +1,7 @@
 package com.aksrua.like.data.entity;
 
 import com.aksrua.card.data.entity.Card;
+import com.aksrua.common.entity.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,7 +22,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(name = "likes")
 @Entity
-public class Like {
+public class Like extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,14 +36,9 @@ public class Like {
 	@JoinColumn(name = "receiver_card_id")
 	private Card receiverCard;
 
+	private LocalDateTime registeredAt;
+
 	private String status;
-
-	private LocalDateTime createdAt;
-
-	@PrePersist
-	protected void onCreate() {
-		this.createdAt = LocalDateTime.now();
-	}
 
 	@Builder
 	public Like(Card senderCard, Card receiverCard) {

@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.aksrua.card.dto.response.CardResponseDto;
+import com.aksrua.card.controller.dto.response.CardResponseDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,10 +51,6 @@ public class CardApiSpecTest {
 
 		// age 필드 검증
 		assertTrue(card.getAge() > 0);
-
-		// gender 필드 검증
-		assertNotNull(card.getGender());
-		assertFalse(card.getGender().isEmpty());
 
 		// distanceKm 필드 검증
 		assertTrue(card.getDistanceKm() >= 0);

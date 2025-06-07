@@ -1,4 +1,4 @@
-package com.aksrua.like.dto.response;
+package com.aksrua.like.controller.dto.response;
 
 import com.aksrua.like.data.entity.Like;
 import lombok.Builder;

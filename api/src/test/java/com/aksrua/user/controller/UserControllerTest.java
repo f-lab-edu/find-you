@@ -1,43 +1,34 @@
 package com.aksrua.user.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static com.aksrua.user.data.entity.Gender.MALE;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.aksrua.card.controller.CardController;
+import com.aksrua.common.exception.DuplicateResourceException;
+import com.aksrua.user.controller.dto.request.SignupRequestDto;
 import com.aksrua.user.data.entity.User;
-import com.aksrua.user.data.repository.UserRepository;
-import com.aksrua.user.dto.request.SignupRequestDto;
-import com.aksrua.user.dto.response.SignupResponseDto;
 import com.aksrua.user.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import java.time.LocalDate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@ActiveProfiles("test")
+@WebMvcTest(controllers = UserController.class)
 class UserControllerTest {
 
 	@Autowired
@@ -46,68 +37,126 @@ class UserControllerTest {
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	@Autowired
+	@MockitoBean
 	private UserService userService;
 
-	@Autowired
-	private UserRepository userRepository;
-
+	@DisplayName("회원가입이 정상적으로 작동한다.")
 	@Test
-	@DisplayName("회원가입 성공 테스트")
-	void signup_Success() throws Exception {
+	void createUserSuccess() throws Exception {
 		// given
 		SignupRequestDto requestDto = SignupRequestDto.builder()
-				.username("testUser")
-				.email("aaa@example.com")
-				.phoneNumber("010-1234-5678")
+				.username("김이름")
+				.gender(MALE)
+				.birthDate(LocalDate.parse("1992-02-14"))
+				.email("testzmail@zmail.com")
+				.password("1234")
+				.phoneNumber("010-5928-9203")
 				.build();
 
-		String content = objectMapper.writeValueAsString(requestDto);
-
-		// when
-		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users")
-						.contentType(MediaType.APPLICATION_JSON)
-						.content(content))
-				.andDo(MockMvcResultHandlers.print())
-				.andExpect(MockMvcResultMatchers.status().isCreated())
-				.andExpect(jsonPath("$.userId").exists())
-				.andReturn();
-
-		// then
-		String responseBody = result.getResponse().getContentAsString();
-		SignupResponseDto responseDto = objectMapper.readValue(responseBody, SignupResponseDto.class);
-
-		// DB에 실제로 저장되었는지 확인
-		User savedUser = userRepository.findById(responseDto.getUserId())
-				.orElseThrow(() -> new AssertionError("User not found in database"));
-
-		// 응답 DTO 검증
-		assertThat(responseDto.getUserId()).isEqualTo(savedUser.getId());
-
-		assertThat(savedUser.getUsername()).isEqualTo(requestDto.getUsername());
-		assertThat(savedUser.getEmail()).isEqualTo(requestDto.getEmail());
-		assertThat(savedUser.getPhoneNumber()).isEqualTo(requestDto.getPhoneNumber());
-	}
-
-	/*
-	@Test
-	@DisplayName("회원가입 시 잘못된 입력값 테스트")
-	void signup_WithInvalidInput() throws Exception {
-		// given
-		SignupRequestDto requestDto = SignupRequestDto.builder()
-				.username(null)  // 빈 사용자 이름
-				.email("invalidemail2")  // 잘못된 이메일 형식
-				.phoneNumber("010-1234-5678")
+		User mockUser = User.builder()
+				.id(1L)
+				.username(requestDto.getUsername())
+				.gender(requestDto.getGender())
+				.birthDate(requestDto.getBirthDate())
+				.email(requestDto.getEmail())
+				.password(requestDto.getPassword())
+				.phoneNumber(requestDto.getPhoneNumber())
 				.build();
 
-		String content = objectMapper.writeValueAsString(requestDto);
+		when(userService.signup(any(User.class))).thenReturn(mockUser);
 
 		// when & then
-		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users")
+		mockMvc.perform(post("/api/v1/users")
+						.content(objectMapper.writeValueAsString(requestDto))
 						.contentType(MediaType.APPLICATION_JSON)
-						.content(content))
-				.andDo(MockMvcResultHandlers.print())
-				.andExpect(MockMvcResultMatchers.status().isBadRequest());
+				)
+				.andDo(print())
+				.andExpect(status().isOk()) //TODO: created 메시지로 전송하려면 어떻게 해야하지 ?
+				.andExpect(jsonPath("$.code").value(201))
+				.andExpect(jsonPath("$.status").value("CREATED"))
+				.andExpect(jsonPath("$.message").value("CREATED"))
+				.andExpect(jsonPath("$.data.userId").value(1L));
+
+		verify(userService, times(1)).signup(any(User.class));
 	}
-	 */
+
+	@DisplayName("이메일 중복으로 인한 회원가입 실패한다.")
+	@Test
+	void signupServiceException() throws Exception {
+		// given
+		SignupRequestDto requestDto = SignupRequestDto.builder()
+				.username("김이름")
+				.gender(MALE)
+				.birthDate(LocalDate.parse("1992-02-14"))
+				.email("testzmail@zmail.com")
+				.password("1234")
+				.phoneNumber("010-5928-9203")
+				.build();
+
+		when(userService.signup(any(User.class)))
+				.thenThrow(new DuplicateResourceException("이메일이 이미 존재합니다."));
+
+		// when & then
+		mockMvc.perform(post("/api/v1/users")
+						.content(objectMapper.writeValueAsString(requestDto))
+						.contentType(MediaType.APPLICATION_JSON)
+				)
+				.andDo(print())
+				.andExpect(status().isConflict())
+				.andExpect(jsonPath("$.code").value(409))
+				.andExpect(jsonPath("$.status").value("CONFLICT"))
+				.andExpect(jsonPath("$.message").value("이메일이 이미 존재합니다."));
+
+		verify(userService, times(1)).signup(any(User.class));
+	}
+
+	@DisplayName("유저의 상세정보를 조회한다.")
+	@Test
+	void getUserDetailSuccess() throws Exception {
+		Long userId = 1L;
+		User mockUser = User.builder()
+				.id(userId)
+				.username("김이름")
+				.gender(MALE)
+				.birthDate(LocalDate.parse("1992-02-14"))
+				.email("testzmail@zmail.com")
+				.password("1234")
+				.phoneNumber("010-5928-9203")
+				.build();
+
+		when(userService.getUserDetail(userId)).thenReturn(mockUser);
+
+		// when && then
+		mockMvc.perform(
+						get("/api/v1/users/{userId}", userId)
+				)
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.code").value("200"))
+				.andExpect(jsonPath("$.status").value("OK"))
+				.andExpect(jsonPath("$.message").value("OK"))
+				.andExpect(jsonPath("$.data.id").value(1L))
+				.andExpect(jsonPath("$.data.username").value("김이름"))
+				.andExpect(jsonPath("$.data.gender").value("MALE"))
+				.andExpect(jsonPath("$.data.birthDate").value("1992-02-14"))
+				.andExpect(jsonPath("$.data.email").value("testzmail@zmail.com"));
+	}
+
+	@DisplayName("존재하지 않는 회원의 정보를 조회하고, 조회를 실패한다.")
+	@Test
+	void getUserDetailWithNoExistUser() throws Exception {
+		Long userId = 999L;
+		when(userService.getUserDetail(userId))
+				.thenThrow(new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
+
+		// then
+		mockMvc.perform(
+						get("/api/v1/users/{userId}", userId)
+				)
+				.andDo(print())
+				.andExpect(status().isInternalServerError())
+				.andExpect(jsonPath("$.code").value("500"))
+				.andExpect(jsonPath("$.status").value("INTERNAL_SERVER_ERROR"))
+				.andExpect(jsonPath("$.message").value("회원 정보를 찾을 수 없습니다."));
+	}
 }

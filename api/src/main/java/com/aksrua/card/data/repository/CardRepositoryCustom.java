@@ -1,9 +1,9 @@
 package com.aksrua.card.data.repository;
 
-import com.aksrua.card.data.repository.dto.response.CardListResponseDto;
+import com.aksrua.card.data.entity.Card;
 import java.util.List;
 
 public interface CardRepositoryCustom {
 
-	List<CardListResponseDto> findCardsByUserFilter(Long userId);
+	List<Card> findCardsByUserFilter(Long userId);
 }

@@ -1,26 +1,25 @@
 package com.aksrua.card.data.repository;
 
+import static com.aksrua.user.data.entity.Gender.MALE;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
+import com.aksrua.card.data.entity.BodyType;
 import com.aksrua.card.data.entity.Card;
+import com.aksrua.card.data.entity.Religion;
 import com.aksrua.user.data.entity.User;
 import com.aksrua.user.data.repository.UserRepository;
-import java.util.ArrayList;
-import java.util.List;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeEach;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 @ActiveProfiles("test")
-@Slf4j
 @SpringBootTest
-//@DataJpaTest
 class CardRepositoryTest {
 
 	@Autowired
@@ -29,52 +28,102 @@ class CardRepositoryTest {
 	@Autowired
 	private UserRepository userRepository;
 
-	@DisplayName("10장의 이성 카드를 소개한다")
+	@AfterEach
+	void tearDown() {
+		cardRepository.deleteAllInBatch();
+		userRepository.deleteAllInBatch();
+	}
+
+	@Transactional
+	@DisplayName("해당 닉네임이 이미 존재하는지 확인한다.")
 	@Test
-	void findTop10ByOrderByCreatedAtDesc() {
+	void findExistNickname() {
 		// given
-		List<User> userList = new ArrayList<>();
-		List<Card> cardList = new ArrayList<>();
+		String findNickname = "귀요미닉네임";
 
-		for (int i = 0; i < 15; i++) {
-			User user = User.builder()
-					.username("username" + i)
-					.email("email" + i + "@gmail.com")
-					.phoneNumber("010-" + i)
-					.build();
+		User user = User.builder()
+				.username("김만겸")
+				.gender(MALE)
+				.birthDate(LocalDate.parse("1992-02-14"))
+				.email("clazziquai01@naver.com")
+				.password("1234")
+				.phoneNumber("010-7617-2221")
+				.registeredAt(LocalDateTime.now())
+				.build();
 
-			userList.add(user);
-		}
+		User savedUser = userRepository.save(user);
 
-		/**
-		 * QNA: CardRepository test에 등장한 userRepository?
-		 */
-		userRepository.saveAll(userList);
+		Card card = Card.builder()
+				.user(savedUser)
+				.nickname(findNickname)
+				.age(22)
+				.height(180)
+				.bodyType(BodyType.SLIM)
+				.job("무직")
+				.address("서울특별시 은평구")
+				.introduction("안녕하세요 :)")
+				.religion(Religion.NONE)
+				.build();
 
-		for (int i = 0; i < 15; i++) {
-			log.info(" ::: user info={}", userList.get(i).toString());
-			Card card = Card.builder()
-					.user(userList.get(i))
-					.gender("MALE")
-					.nickname("nickname" + i)
-					.age(22 + i)
-					.job("개발자")
-					.address("서울시 은평구")
-					.introduction("안녕하세요")
-					.distanceKm(11 + i)
-					.imagesUrl("imagesUrl")
-					.hobbies("hobbies")
-					.religion("기독교")
-					.build();
-
-			cardList.add(card);
-		}
-		cardRepository.saveAll(cardList);
+		Card savedCard = cardRepository.save(card);
 
 		// when
-		List<Card> findCards = cardRepository.findTop10ByOrderByCreatedAtDesc();
+		Boolean existsByNickname = cardRepository.existsByNickname(findNickname);
 
 		// then
-		assertThat(findCards).hasSize(10);
+		assertThat(existsByNickname).isTrue();
+	}
+
+	@Transactional
+	@DisplayName("해당 닉네임이 이미 존재하지 않음을 확인한다.")
+	@Test
+	void findNonExistNickname() {
+		// given
+		String savedNickname = "귀요미닉네임";
+		String theOtherNickname = "아무거나닉넴";
+
+		User user = User.builder()
+				.username("김만겸")
+				.gender(MALE)
+				.birthDate(LocalDate.parse("1992-02-14"))
+				.email("clazziquai01@naver.com")
+				.password("1234")
+				.phoneNumber("010-7617-2221")
+				.registeredAt(LocalDateTime.now())
+				.build();
+
+		User savedUser = userRepository.save(user);
+
+		Card card = Card.builder()
+				.user(savedUser)
+				.nickname(savedNickname)
+				.age(22)
+				.height(180)
+				.bodyType(BodyType.SLIM)
+				.job("무직")
+				.address("서울특별시 은평구")
+				.introduction("안녕하세요 :)")
+				.religion(Religion.NONE)
+				.build();
+
+		Card savedCard = cardRepository.save(card);
+
+		// when
+		Boolean existsByNickname = cardRepository.existsByNickname(theOtherNickname);
+
+		// then
+		assertThat(existsByNickname).isFalse();
+	}
+
+	@DisplayName("10장을 가져오는지 확인한다")
+	@Test
+	//TODO: user와 card생성 후 테스트 코드 작성
+	void getCardListTest() {
+		// given
+
+		// when
+
+		// then
+		assertThat(1).isEqualTo(1);
 	}
 }

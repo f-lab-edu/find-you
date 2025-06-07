@@ -2,21 +2,25 @@ package com.aksrua.card.controller;
 
 import static com.aksrua.filter.dto.response.FilterResponseDto.fromEntity;
 
-import com.aksrua.card.data.entity.BodyType;
+import com.aksrua.card.controller.dto.response.CardListResponseDto;
 import com.aksrua.card.data.entity.Card;
-import com.aksrua.card.data.entity.Religion;
-import com.aksrua.card.data.repository.dto.response.CardListResponseDto;
-import com.aksrua.card.dto.request.CardRequestDto;
-import com.aksrua.card.dto.request.CreateCardRequestDto;
-import com.aksrua.card.dto.response.CardResponseDto;
-import com.aksrua.card.dto.response.CreateCardResponseDto;
+import com.aksrua.card.controller.dto.request.CardRequestDto;
+import com.aksrua.card.controller.dto.request.CreateCardRequestDto;
+import com.aksrua.card.controller.dto.response.CardResponseDto;
+import com.aksrua.card.controller.dto.response.CreateCardResponseDto;
 import com.aksrua.card.service.CardService;
+import com.aksrua.common.dto.ApiResponse;
 import com.aksrua.filter.data.entity.Filter;
+import com.aksrua.filter.dto.request.CreateFilterRequestDto;
 import com.aksrua.filter.dto.request.UpdateFilterRequestDto;
+import com.aksrua.filter.dto.response.CreateFilterResponseDto;
 import com.aksrua.filter.dto.response.FilterResponseDto;
+import com.aksrua.filter.dto.response.UpdateFilterResponseDto;
 import com.aksrua.filter.service.FilterService;
 import com.aksrua.user.data.entity.User;
 import com.aksrua.user.service.UserService;
+import jakarta.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,86 +40,54 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1")
 @RestController
 public class CardController {
-
 	private final CardService cardService;
-	private final FilterService filterService;
 	private final UserService userService;
+	private final FilterService filterService;
 
-	//EntityNotFoundException
 	@PostMapping("/cards")
-	public ResponseEntity<CreateCardResponseDto> createCardAndSetFilter(@RequestBody CreateCardRequestDto requestDto) {//TODO: 인증방식 도입
+	public ApiResponse<CreateCardResponseDto> createCard(@Valid @RequestBody CreateCardRequestDto requestDto) {//TODO: 인증방식 도입
 		User joinedUser = userService.getUserDetail(requestDto.getUserId());
+		Card card = requestDto.toEntity(joinedUser);
 
-		Card card = Card.builder()
-				.user(joinedUser)
-				.nickname(requestDto.getNickname())
-				.age(requestDto.getAge())
-				.height(requestDto.getHeight())
-				.bodyType(requestDto.getBodyType())
-				.job(requestDto.getJob())
-				.address(requestDto.getAddress())
-				.introduction(requestDto.getIntroduction())
-				.religion(requestDto.getReligion())
-				.build();
-
-		Filter filter = Filter.builder()
-				.user(joinedUser)
-				.minAge(20)
-				.maxAge(40)
-				.minHeight(150)
-				.maxHeight(200)
-				.bodyType(BodyType.ANY)
-				.religion(Religion.ANY)
-				.build();
-
-		Card createdCard = cardService.createCardAndSetFilter(card, filter);
-		return ResponseEntity.status(HttpStatus.CREATED).body(CreateCardResponseDto.fromEntity(createdCard));
+		Card createdCard = cardService.createCard(card);
+		return ApiResponse.of(HttpStatus.CREATED, CreateCardResponseDto.fromEntity(createdCard));
 	}
 
 	@GetMapping("/cards")
-	public ResponseEntity<List<CardListResponseDto>> getCardsList(@RequestParam Long userId) {
-		return ResponseEntity.status(HttpStatus.OK).body(cardService.getCardList(userId));
+	public ApiResponse<List<CardListResponseDto>> getCardsList(@RequestParam Long userId) {
+		List<CardListResponseDto> responseList = cardService.getCardList(userId).stream()
+				.map(CardListResponseDto::fromEntity)
+				.toList();
+		return ApiResponse.ok(responseList);
+	}
+
+	@GetMapping("/cards/{cardId}")
+	public ApiResponse<CardResponseDto> getCardDetail(@PathVariable Long cardId) {
+		return ApiResponse.ok(CardResponseDto.fromEntity(cardService.getCardDetails(cardId)));
 	}
 
 	@GetMapping("/cards/{userId}/filter")
-	public ResponseEntity<FilterResponseDto> getFilterDetail(@PathVariable Long userId) {
+	public ApiResponse<FilterResponseDto> getFilterDetail(@PathVariable Long userId) {
 		FilterResponseDto filterDetail = fromEntity(filterService.getFilterDetail(userId));
-		return ResponseEntity.status(HttpStatus.OK).body(filterDetail);
+		return ApiResponse.ok(filterDetail);
+	}
+
+	@PostMapping("/cards/{userId}/filter")
+	public ApiResponse<CreateFilterResponseDto> createFilter(@PathVariable Long userId, @RequestBody CreateFilterRequestDto requestDto) {
+		//TODO: user 조회를 성능적으로 보완한 jpa getReferenceById 권장사항
+		User findUser = userService.getReferenceById(userId);
+		Filter filter = requestDto.toEntity(findUser);
+
+		Filter savedFilter = filterService.createFilter(filter);
+		return ApiResponse.of(HttpStatus.CREATED, CreateFilterResponseDto.fromEntity(savedFilter));
 	}
 
 	@PatchMapping("/cards/{userId}/filter")
-	public void updateFilter(@PathVariable Long userId, @RequestBody UpdateFilterRequestDto requestDto) {
-		User findUser = userService.getUserDetail(requestDto.getUserId());
-		filterService.updateFilter(findUser, requestDto);
-	}
+	public ApiResponse<UpdateFilterResponseDto> updateFilter(@PathVariable Long userId, @RequestBody UpdateFilterRequestDto requestDto) {
+		User findUser = userService.getReferenceById(userId);
+		Filter filter = requestDto.toEntity(findUser);
 
-	@GetMapping("/cards/liked/sent")
-	public ResponseEntity<List<CardResponseDto>> getSentLikedCards(@RequestBody CardRequestDto requestDto) {
-		/**
-		 * getCardsList() 와 같이 카드목록을 가지고 오는 DTO인데 DTO재활용 해도 괜찮을까 ?
-		 *
-		 * TODO: 인증 체계 활용(Access token)
-		 * */
-		List<CardResponseDto> responseDtoList = cardService.getSentLikedCards(requestDto.getCardId())
-				.stream()
-				.map(CardResponseDto::fromEntity)
-				.toList();
-
-		return ResponseEntity.status(HttpStatus.OK).body(responseDtoList);
-	}
-
-	/**
-	 * TODO: 인증 체계 활용(Access token)
-	 * @param requestDto
-	 * @return
-	 */
-	@GetMapping("/cards/liked/received")
-	public ResponseEntity<List<CardResponseDto>> getCardLikedByOthers(@RequestBody CardRequestDto requestDto) {
-		List<CardResponseDto> responseDtoList = cardService.getCardLikedByOthers(requestDto.getCardId())
-				.stream()
-				.map(CardResponseDto::fromEntity)
-				.toList();
-
-		return ResponseEntity.status(HttpStatus.OK).body(responseDtoList);
+		Filter updateFilter = filterService.updateFilter(userId, filter);
+		return ApiResponse.ok(UpdateFilterResponseDto.fromEntity(updateFilter));
 	}
 }

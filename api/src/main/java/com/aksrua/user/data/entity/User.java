@@ -1,19 +1,16 @@
 package com.aksrua.user.data.entity;
 
 import com.aksrua.card.data.entity.Card;
+import com.aksrua.common.entity.BaseEntity;
 import com.aksrua.filter.data.entity.Filter;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.querydsl.core.annotations.QueryProjection;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,7 +25,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(name = "users")
 @Entity
-public class User {
+public class User extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,11 +34,11 @@ public class User {
 	@Column(nullable = false)
 	private String username;
 
-	@Column(nullable = false)
-	@Enumerated(EnumType.STRING)
+	@Column(name = "gender", nullable = false)
+//	@Enumerated(EnumType.STRING)
 	private Gender gender;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd")
 	@Column(nullable = false)
 	private LocalDate birthDate;
 
@@ -54,6 +51,11 @@ public class User {
 	@Column(nullable = false)
 	private String phoneNumber;
 
+	//TODO: user 마지막 접속일시로 최근 접속일 기록하기
+	//TODO: user 가입일자로 '최근 가입한 사람' 필터링 해주기 위한 데이터
+	@Column(nullable = false)
+	private LocalDateTime registeredAt;
+
 	//	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
 	@OneToOne(mappedBy = "user")
 	private Card card;
@@ -61,43 +63,6 @@ public class User {
 	//	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
 	@OneToOne(mappedBy = "user")
 	private Filter filter;
-
-	private LocalDateTime createdAt;
-
-	private LocalDateTime updatedAt;
-
-	@PrePersist
-	protected void onCreate() {
-		this.createdAt = LocalDateTime.now();
-		this.updatedAt = LocalDateTime.now();
-	}
-
-	@PreUpdate
-	protected void onUpdate() {
-		this.updatedAt = LocalDateTime.now();
-	}
-
-	@Builder
-	public User(Long id, String username, String email, String phoneNumber) {
-		this.id = id;
-		this.username = username;
-		this.email = email;
-		this.phoneNumber = phoneNumber;
-	}
-
-	@Builder
-	public User(Long id, String email, String password) {
-		this.id = id;
-		this.email = email;
-		this.password = password;
-	}
-
-	@Builder
-	public User(String username, String email, String phoneNumber) {
-		this.username = username;
-		this.email = email;
-		this.phoneNumber = phoneNumber;
-	}
 
 	@QueryProjection
 	public User(Gender gender) {

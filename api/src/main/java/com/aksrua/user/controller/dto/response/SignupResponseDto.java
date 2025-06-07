@@ -1,4 +1,4 @@
-package com.aksrua.user.dto.response;
+package com.aksrua.user.controller.dto.response;
 
 import com.aksrua.user.data.entity.User;
 import lombok.AllArgsConstructor;

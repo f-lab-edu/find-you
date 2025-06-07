@@ -1,160 +1,138 @@
 package com.aksrua.user.service;
 
-import static com.aksrua.user.data.entity.Gender.FEMALE;
 import static com.aksrua.user.data.entity.Gender.MALE;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.BDDMockito.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.never;
+import static org.mockito.BDDMockito.verify;
 
 import com.aksrua.common.exception.DuplicateResourceException;
 import com.aksrua.user.data.entity.User;
 import com.aksrua.user.data.repository.UserRepository;
 import java.time.LocalDate;
-import org.junit.jupiter.api.AfterEach;
+import java.time.LocalDateTime;
+import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("test")
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
-	@Autowired
+	@InjectMocks
 	private UserService userService;
 
-	@Autowired
+	@Mock
 	private UserRepository userRepository;
 
-	@AfterEach
-	void tearDown() {
-		userRepository.deleteAllInBatch();
-	}
+	private User sampleUser1;
 
-	@DisplayName("유저 생성 후 해당 유저를 반환한다.")
-	@Test
-	void createUser() {
-		// given
-		User user = User.builder()
-				.username("김용환")
+	@BeforeEach
+	void setUp() {
+		LocalDateTime registeredAt = LocalDateTime.now();
+		sampleUser1 = User.builder()
+				.id(1L)
+				.username("김이름")
 				.gender(MALE)
 				.birthDate(LocalDate.parse("1992-02-14"))
-				.email("clazziquai01@gmail.com")
+				.email("nonemail@zmail.com")
 				.password("1234")
-				.phoneNumber("010-7617-2221")
+				.phoneNumber("010-5912-3817")
+				.registeredAt(registeredAt)
 				.build();
+	}
+
+	@DisplayName("유저가 정상적으로 생성이 된다.")
+	@Test
+	void signupUserSuccess() {
+		// given
+		given(userRepository.existsByEmail(sampleUser1.getEmail())).willReturn(false);
+		given(userRepository.save(any(User.class))).willReturn(sampleUser1);
 
 		// when
-		User signupUser = userService.signup(user);
+		User savedUser = userService.signup(sampleUser1);
 
 		// then
-		assertThat(signupUser.getId()).isNotNull();
-		assertThat(signupUser.getGender()).isEqualByComparingTo(MALE);
-
-		assertThat(signupUser.getBirthDate()).isEqualTo(LocalDate.parse("1992-02-14"));
-		assertThat(signupUser.getEmail()).isEqualTo("clazziquai01@gmail.com");
-		assertThat(signupUser.getPassword()).isEqualTo("1234");
-		assertThat(signupUser.getPhoneNumber()).isEqualTo("010-7617-2221");
-		/*
-		assertThat(signupUser)
-				.extracting("birthDate", "email", "password", "phoneNumber")
-				.containsExactlyInAnyOrder(
-						tuple(LocalDate.parse("1992-02-14")
-								, "clazziquai01@gmail.com"
-								, "1234"
-								,"010-7617-2221")
+		assertThat(savedUser).isNotNull();
+		assertThat(savedUser)
+				.extracting("id", "username", "gender", "birthDate", "email", "password", "phoneNumber", "registeredAt")
+				.contains(
+						sampleUser1.getId(),
+						sampleUser1.getUsername(),
+						sampleUser1.getGender(),
+						sampleUser1.getBirthDate(),
+						sampleUser1.getEmail(),
+						sampleUser1.getPassword(),
+						sampleUser1.getPhoneNumber(),
+						sampleUser1.getRegisteredAt()
 				);
-		 */
+		verify(userRepository).existsByEmail(sampleUser1.getEmail());
+		verify(userRepository).save(sampleUser1);
 	}
 
-	@DisplayName("중복된 이메일 입력 시 exception을 반환한다.")
+	@DisplayName("유저 정보 중 이메일이 중복이면 생성이 되지 않고, 예외를 반환한다.")
 	@Test
-	void createUserWithDuplicateEmail() {
+	void signupUserFailureWithDuplicateEmail() {
 		// given
-		User user1 = User.builder()
-				.username("김용환")
-				.gender(MALE)
-				.birthDate(LocalDate.parse("1992-02-14"))
-				.email("clazziquai01@gmail.com")
-				.password("1234")
-				.phoneNumber("010-7617-2221")
-				.build();
-
-		User user2 = User.builder()
-				.username("다른사람")
-				.gender(FEMALE)
-				.birthDate(LocalDate.parse("1992-02-14"))
-				.email("clazziquai01@gmail.com")
-				.password("1234")
-				.phoneNumber("010-1234-1234")
-				.build();
-
-		// when
-		User signupUser1 = userService.signup(user1);
+		given(userRepository.existsByEmail(sampleUser1.getEmail())).willReturn(true);
 
 		// when & then
-		DuplicateResourceException exception = assertThrows(
-				DuplicateResourceException.class,
-				() -> userService.signup(user2)
-		);
+		assertThatThrownBy(() -> userService.signup(sampleUser1))
+				.isInstanceOf(DuplicateResourceException.class)
+				.hasMessage("이메일이 이미 존재합니다.");
 
-		assertThat(exception.getMessage()).isEqualTo("이메일이 이미 존재합니다.");
+		verify(userRepository).existsByEmail(sampleUser1.getEmail());
+		verify(userRepository, never()).save(any(User.class));
 	}
 
-	@DisplayName("유저 ID를 받아 해당 유저를 조회한다.")
+	@DisplayName("유저의 정보를 가져온다.")
 	@Test
-	void getUserById() {
+	void getUserDetail() {
 		// given
-		User user = User.builder()
-				.username("김용환")
-				.gender(MALE)
-				.birthDate(LocalDate.parse("1992-02-14"))
-				.email("clazziquai01@gmail.com")
-				.password("1234")
-				.phoneNumber("010-7617-2221")
-				.build();
-		User signupUser = userService.signup(user);
+		Long userId = 1L;
+		given(userRepository.findById(userId)).willReturn(Optional.of(sampleUser1));
 
 		// when
-		/**
-		 * 해당 테스트는 signup method에 의존적이니 옳지 않은 테스트인가 ?
-		 */
-		User userDetail = userService.getUserDetail(signupUser.getId());
+		User findUser = userService.getUserDetail(userId);
 
 		// then
-		assertThat(userDetail.getId()).isNotNull();
-		assertThat(userDetail.getId()).isEqualTo(1);
+		assertThat(findUser).isNotNull();
+		assertThat(findUser)
+				.extracting("id", "username", "gender", "birthDate", "email", "password", "phoneNumber", "registeredAt")
+				.contains(
+						userId,
+						sampleUser1.getUsername(),
+						sampleUser1.getGender(),
+						sampleUser1.getBirthDate(),
+						sampleUser1.getEmail(),
+						sampleUser1.getPassword(),
+						sampleUser1.getPhoneNumber(),
+						sampleUser1.getRegisteredAt()
+				);
 
-		assertThat(signupUser.getGender()).isEqualByComparingTo(MALE);
-
-		assertThat(signupUser.getBirthDate()).isEqualTo(LocalDate.parse("1992-02-14"));
-		assertThat(signupUser.getEmail()).isEqualTo("clazziquai01@gmail.com");
-		assertThat(signupUser.getPassword()).isEqualTo("1234");
-		assertThat(signupUser.getPhoneNumber()).isEqualTo("010-7617-2221");
+		verify(userRepository).findById(userId);
 	}
 
-	@DisplayName("조회하지 않는 유저ID를 조회하면 Exception을 반환한다.")
+	@DisplayName("존재하지 않는 유저의 정보를 가져오기 시도하면, 예외를 반환한다.")
 	@Test
-	void getUserByInvalidIdThrowsException() {
+	void tryGetNonExistingUser() {
 		// given
-		User user = User.builder()
-				.username("김용환")
-				.gender(MALE)
-				.birthDate(LocalDate.parse("1992-02-14"))
-				.email("clazziquai01@gmail.com")
-				.password("1234")
-				.phoneNumber("010-7617-2221")
-				.build();
-		User signupUser = userService.signup(user);
+		Long userId = 999L;
+		given(userRepository.findById(userId)).willReturn(Optional.empty());
 
-		/**
-		 * - 해당 테스트는 signup method에 의존적이니 옳지 않은 테스트인가 ?
-		 * - 옳지않은 user id임을 어떻게 알 수 있을까 ?
-		 */
 		// when & then
-		IllegalArgumentException exception = assertThrows(
-				IllegalArgumentException.class,
-				() -> userService.getUserDetail(999L)
-		);
+		assertThatThrownBy(() -> userService.getUserDetail(userId))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessage("회원 정보를 찾을 수 없습니다.");
+
+		verify(userRepository).findById(userId);
 	}
 }

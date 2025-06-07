@@ -9,8 +9,7 @@ public enum BodyType {
 	NORMAL("보통"),
 	MUSCULAR("근육질"),
 	CHUBBY("약간통통"),
-	FAT("통통"),
-	ANY("상관없음");
+	FAT("통통");
 
 	private final String description;
 

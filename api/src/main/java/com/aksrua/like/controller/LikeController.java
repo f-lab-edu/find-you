@@ -3,8 +3,8 @@ package com.aksrua.like.controller;
 import com.aksrua.card.data.entity.Card;
 import com.aksrua.card.data.repository.CardRepository;
 import com.aksrua.like.data.entity.Like;
-import com.aksrua.like.dto.request.SendLikeRequestDto;
-import com.aksrua.like.dto.response.SendLikeResponseDto;
+import com.aksrua.like.controller.dto.request.SendLikeRequestDto;
+import com.aksrua.like.controller.dto.response.SendLikeResponseDto;
 import com.aksrua.like.service.LikeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ public class LikeController {
 
 	@PostMapping("/likes")
 	public ResponseEntity<SendLikeResponseDto> sendLike(@RequestBody SendLikeRequestDto requestDto) {
-		Card senderCard = cardRepository.findByUserId(requestDto.getSenderCardId());
+		/*Card senderCard = cardRepository.findByUserId(requestDto.getSenderCardId());
 		Card receiverCard = cardRepository.findByUserId(requestDto.getReceiverCardId());
 
 		Like like = Like.builder()
@@ -40,7 +40,8 @@ public class LikeController {
 
 		Like sendedLike = likeService.likeSend(like);
 
-		return ResponseEntity.status(HttpStatus.CREATED).body(SendLikeResponseDto.fromEntity(sendedLike));
+		return ResponseEntity.status(HttpStatus.CREATED).body(SendLikeResponseDto.fromEntity(sendedLike));*/
+		return null;
 	}
 
 	@DeleteMapping("/likes/{likeId}")

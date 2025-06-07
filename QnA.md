@@ -38,3 +38,7 @@ date type vs datetime(6) type
 ### @RequestParam vs @PathVariable
 
 ### EntityNotFoundException?
+
+### 추가적으로 채팅 기능이나 결제 기능을 확장하려고 한다면?
+
+### enum type은 notblank 에러가 생긴다

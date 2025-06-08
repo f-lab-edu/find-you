@@ -2,7 +2,9 @@ package com.aksrua.like.data.entity;
 
 import com.aksrua.card.data.entity.Card;
 import com.aksrua.common.entity.BaseEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -28,21 +30,30 @@ public class Like extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne
+	/*
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "sender_card_id")
 	private Card senderCard;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "receiver_card_id")
 	private Card receiverCard;
+	*/
+	@Column(name = "sender_card_id")
+	private Long senderCardId;
+
+	@Column(name = "receiver_card_id")
+	private Long receiverCardId;
 
 	private LocalDateTime registeredAt;
 
-	private String status;
+	private Status status;
 
 	@Builder
-	public Like(Card senderCard, Card receiverCard) {
-		this.senderCard = senderCard;
-		this.receiverCard = receiverCard;
+	public Like(Long senderCardId, Long receiverCardId, LocalDateTime registeredAt, Status status) {
+		this.senderCardId = senderCardId;
+		this.receiverCardId = receiverCardId;
+		this.registeredAt = registeredAt;
+		this.status = status;
 	}
 }

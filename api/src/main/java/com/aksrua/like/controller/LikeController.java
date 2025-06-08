@@ -1,19 +1,13 @@
 package com.aksrua.like.controller;
 
-import com.aksrua.card.data.entity.Card;
 import com.aksrua.card.data.repository.CardRepository;
-import com.aksrua.like.data.entity.Like;
-import com.aksrua.like.controller.dto.request.SendLikeRequestDto;
-import com.aksrua.like.controller.dto.response.SendLikeResponseDto;
 import com.aksrua.like.service.LikeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,7 +23,7 @@ public class LikeController {
 	private final CardRepository cardRepository;
 
 	@PostMapping("/likes")
-	public ResponseEntity<SendLikeResponseDto> sendLike(@RequestBody SendLikeRequestDto requestDto) {
+	public ResponseEntity<?> sendLike() {
 		/*Card senderCard = cardRepository.findByUserId(requestDto.getSenderCardId());
 		Card receiverCard = cardRepository.findByUserId(requestDto.getReceiverCardId());
 

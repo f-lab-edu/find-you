@@ -1,4 +1,4 @@
-package com.aksrua.card.dto.request;
+package com.aksrua.card.controller.dto.request;
 
 import lombok.Builder;
 import lombok.Getter;

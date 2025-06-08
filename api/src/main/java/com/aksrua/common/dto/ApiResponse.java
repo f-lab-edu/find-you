@@ -1,24 +1,33 @@
 package com.aksrua.common.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
 
 @Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class ApiResponse<T> {
-	private boolean success;
+
+	//TODO: LIST형태의 data를 반환할때는 length값도 포함해서 줄 수 있지않을까 ?
+	private int code;
+	private HttpStatus status;
 	private String message;
 	private T data;
 
-	public static <T> ApiResponse<T> success(T data) {
-		return ApiResponse.<T>builder().success(true).message("").data(data).build();
+	public ApiResponse(HttpStatus status, String message, T data) {
+		this.code = status.value();
+		this.status = status;
+		this.message = message;
+		this.data = data;
 	}
 
-	public static <T> ApiResponse<T> error(String message) {
-		return ApiResponse.<T>builder().success(false).message(message).build();
+	public static <T> ApiResponse<T> of(HttpStatus httpStatus, String message, T data) {
+		return new ApiResponse<>(httpStatus, message, data);
+	}
+
+	public static <T> ApiResponse<T> of(HttpStatus httpStatus, T data) {
+		return of(httpStatus, httpStatus.name(), data);
+	}
+
+	public static <T> ApiResponse<T> ok(T data) {
+		return of(HttpStatus.OK, data);
 	}
 }

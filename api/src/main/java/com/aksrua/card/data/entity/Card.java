@@ -1,16 +1,23 @@
 package com.aksrua.card.data.entity;
 
 import com.aksrua.common.entity.BaseEntity;
+import com.aksrua.interaction.data.entity.Like;
 import com.aksrua.user.data.entity.User;
 import com.querydsl.core.annotations.QueryProjection;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -61,11 +68,21 @@ public class Card extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private Religion religion;
 
+	@JoinColumn(name = "sender_card_id")
+	@Builder.Default
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<Like> sentLikes = new ArrayList<>();
+
+	@JoinColumn(name = "receiver_card_id")
+	@Builder.Default
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<Like> receivedLikes = new ArrayList<>();
+
 	@Builder
-	public Card(String nickname, Integer age, String job, String address, String introduction,
+	public Card(String nickname, LocalDate birthDate, String job, String address, String introduction,
 				String imagesUrl, String hobbies, Religion religion) {
 		this.nickname = nickname;
-		this.age = age;
+		this.age = calculateUserAge(birthDate);
 		this.job = job;
 		this.address = address;
 		this.introduction = introduction;
@@ -87,5 +104,16 @@ public class Card extends BaseEntity {
 		this.introduction = introduction;
 		this.imagesUrl = imagesUrl;
 		this.religion = religion;
+	}
+
+	private Integer calculateUserAge(LocalDate birthDate) {
+		LocalDate now = LocalDate.now();
+
+		int age = now.getYear() - birthDate.getYear();
+		if (now.getMonthValue() < birthDate.getMonthValue() ||
+				(now.getMonthValue() == birthDate.getMonthValue() && now.getDayOfMonth() < birthDate.getDayOfMonth())) {
+			age--;
+		}
+		return age;
 	}
 }

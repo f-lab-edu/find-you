@@ -1,17 +1,18 @@
-package com.aksrua.like.service;
+package com.aksrua.interaction.service;
 
-import com.aksrua.like.data.entity.Like;
-import com.aksrua.like.data.repository.LikeRepository;
+import com.aksrua.interaction.data.entity.Like;
+import com.aksrua.interaction.data.repository.DislikeRepository;
+import com.aksrua.interaction.data.repository.LikeRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-@Slf4j
 @RequiredArgsConstructor
 @Service
-public class LikeService {
+public class InteractionService {
 
 	private final LikeRepository likeRepository;
+	private final DislikeRepository dislikeRepository;
+
 
 	public Like sendLike(Like like) {
 		// s_id, r_id를 조회하여 반대 상황이 있다면은

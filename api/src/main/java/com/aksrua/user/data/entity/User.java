@@ -5,8 +5,10 @@ import com.aksrua.common.entity.BaseEntity;
 import com.aksrua.filter.data.entity.Filter;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.querydsl.core.annotations.QueryProjection;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -56,12 +58,10 @@ public class User extends BaseEntity {
 	@Column(nullable = false)
 	private LocalDateTime registeredAt;
 
-	//	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
-	@OneToOne(mappedBy = "user")
+	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Card card;
 
-	//	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
-	@OneToOne(mappedBy = "user")
+	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Filter filter;
 
 	@QueryProjection

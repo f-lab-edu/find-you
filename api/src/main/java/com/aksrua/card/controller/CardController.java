@@ -16,6 +16,10 @@ import com.aksrua.filter.dto.response.CreateFilterResponseDto;
 import com.aksrua.filter.dto.response.FilterResponseDto;
 import com.aksrua.filter.dto.response.UpdateFilterResponseDto;
 import com.aksrua.filter.service.FilterService;
+import com.aksrua.interaction.data.entity.Like;
+import com.aksrua.interaction.data.entity.LikeStatus;
+import com.aksrua.interaction.dto.response.RemoveLikeResponseDto;
+import com.aksrua.interaction.dto.response.SendLikeResponseDto;
 import com.aksrua.interaction.service.InteractionService;
 import com.aksrua.user.data.entity.User;
 import com.aksrua.user.service.UserService;
@@ -94,12 +98,22 @@ public class CardController {
 	}
 
 	@PostMapping("/cards/{userId}/likes/{cardId}")
-	public void sendLike(@PathVariable Long userId, @PathVariable Long cardId) {
+	public ApiResponse<SendLikeResponseDto> sendLike(@PathVariable Long userId, @PathVariable Long cardId) {
+		//TODO: 서로 좋아요가 되었을때 좋아요를 보냈던 기존 사용자에게도 좋아요 알림이 가도록 기능을 추가해야한다.
+		Like like = Like.createSentLike(userId, cardId);
+		Like sentLike = interactionService.sendLike(like);
+		return ApiResponse.of(HttpStatus.CREATED, SendLikeResponseDto.fromEntity(sentLike));
+	}
+
+	@DeleteMapping("/cards/{userId}/likes/{likeId}")
+	public ApiResponse<?> removeLike(@PathVariable Long userId, @PathVariable Long likeId) {
+		interactionService.removeLike(userId, likeId);
+		return ApiResponse.of(HttpStatus.NO_CONTENT, new RemoveLikeResponseDto(likeId, "삭제가 완료 되었습니다."));
+	}
+
+	@PostMapping("/cards/{userId}/dislikes/{cardId}")
+	public void sendDislike(@PathVariable Long userId, @PathVariable Long cardId) {
 
 	}
 
-	@DeleteMapping("/cards/{userId}/likes/{cardId}")
-	public void removeLike(@PathVariable Long userId, @PathVariable Long cardId) {
-
-	}
 }

@@ -18,3 +18,21 @@
 - [ ] message 코드화
 - [X] 테스트코드 작성
 - [ ] README md 작성
+
+### 2025 06 09
+- [ ] github issue 관리 시작하기
+- [ ] 인증인가
+- [ ] BaseEntity 의문 ?
+- [X] JpaAuditingConfig 어딘가 하나로 합치기 가능
+- [ ] querydsl 구현체 객체 관계에서 상속, 구현 관계에서 service에서 바로 사용이 가능한것... 어떻게 그렇게 되는건지 ?
+- [ ] draw.io 활용해서 다이어그램 그리기
+- [ ] illegalargument를 internal_server_error로 그냥 보내주는것에 대해서
+- [ ] filter update 부분 transactional 왜 필요한건가 ?
+- [ ] Gender 설정 없이 0,1 이 들어가는데 어떻게 들어가는건지 확인해보기
+- [ ] datasql 메인에서 관리하지 않고, test에서 관리해보기
+- [ ] controller테스트는 통합 테스트로 , controller는 unit테스트로 잘 안짠다.
+- [ ] api spec test code == controller 테스트
+- [ ] docker, gradle 설정파일 재수정
+- [ ] 최종 문서 작성
+- [ ] 인증인가 구현은 되었지만, 보호받아야 할 API 주소가 보호를 못받고있는 상태, 모든 경로에서 하나하나 header를 가져와서 조건을 따져야하는건가 ?
+- [ ] exception 공통 처리

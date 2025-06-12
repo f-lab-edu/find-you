@@ -22,7 +22,7 @@ public class UserService {
 		return userRepository.save(user);
 	}
 
-	public User getUserDetail(Long userId) {
+	public User getUserDetails(Long userId) {
 		return userRepository.findById(userId)
 				.orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
 	}

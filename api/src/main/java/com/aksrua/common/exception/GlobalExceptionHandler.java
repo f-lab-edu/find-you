@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
 	public ApiResponse<Object> handleDtoValidation(BindException e) {
 		return ApiResponse.of(
 				HttpStatus.BAD_REQUEST,
-				e.getBindingResult().getAllErrors().get(0).getDefaultMessage(),
+				e.getBindingResult().getAllErrors().getFirst().getDefaultMessage(),
 				null
 		);
 	}

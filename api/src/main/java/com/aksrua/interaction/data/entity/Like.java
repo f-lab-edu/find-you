@@ -31,15 +31,46 @@ public class Like extends BaseEntity {
 	@Column(name = "receiver_card_id")
 	private Long receiverCardId;
 
-	private LocalDateTime registeredAt;
-
+	@Column(nullable = false)
 	private LikeStatus likeStatus;
 
-	@Builder
-	public Like(Long senderCardId, Long receiverCardId, LocalDateTime registeredAt, LikeStatus likeStatus) {
-		this.senderCardId = senderCardId;
-		this.receiverCardId = receiverCardId;
-		this.registeredAt = registeredAt;
-		this.likeStatus = likeStatus;
+	// ENUM 중 [SENT]로 보내지는 시점
+	private LocalDateTime registeredAt;
+
+	// ENUM 중 [CHECKED]로 보내지는 시점
+	private LocalDateTime checkedAt;
+
+	// ENUM 중 [MATCHED]로 보내지는 시점
+	private LocalDateTime matchedAt;
+
+	public static Like createSentLike(Long senderCardId, Long receiverCardId) {
+		return Like.builder()
+				.senderCardId(senderCardId)
+				.receiverCardId(receiverCardId)
+				.registeredAt(LocalDateTime.now())
+				.likeStatus(LikeStatus.SENT).build();
+	}
+
+	public void changeLikeStatusToMatched () {
+		this.likeStatus = LikeStatus.MATCHED;
+		this.matchedAt = LocalDateTime.now();
+	}
+
+	public void validateRemovalPermission(Long userId) {
+		if (!isOwnedBy(userId)) {
+			throw new IllegalArgumentException("다른 사용자의 좋아요는 삭제할 수 없습니다.");
+		}
+
+		if (isMatched()) {
+			throw new IllegalArgumentException("이미 매칭이 된 상대입니다. 대화방에서 나가기를 눌러주세요.");
+		}
+	}
+
+	private boolean isMatched() {
+		return LikeStatus.MATCHED.equals(this.likeStatus);
+	}
+
+	private boolean isOwnedBy(Long userId) {
+		return this.senderCardId.equals(userId);
 	}
 }

@@ -124,7 +124,7 @@ public class CardController {
 	@DeleteMapping("/cards/{userId}/likes/{likeId}")
 	public ApiResponse<RemoveLikeResponseDto> removeLike(@PathVariable Long userId, @PathVariable Long likeId) {
 		interactionService.removeLike(userId, likeId);
-		return ApiResponse.of(HttpStatus.NO_CONTENT, new RemoveLikeResponseDto(likeId, "삭제가 완료 되었습니다."));
+		return ApiResponse.of(HttpStatus.NO_CONTENT, new RemoveLikeResponseDto(likeId, "좋아요가 취소 되었습니다."));
 	}
 
 	@GetMapping("/cards/{userId}/likes/received")

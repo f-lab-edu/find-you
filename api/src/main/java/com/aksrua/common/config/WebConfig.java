@@ -1,6 +1,6 @@
-package com.aksrua.config;
+package com.aksrua.common.config;
 
-import com.aksrua.filterchain.AuthTokenFilter;
+import com.aksrua.common.filter.AuthTokenFilter;
 import com.querydsl.core.annotations.Config;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;

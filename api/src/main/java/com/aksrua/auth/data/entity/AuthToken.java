@@ -1,5 +1,7 @@
 package com.aksrua.auth.data.entity;
 
+import static java.time.LocalDateTime.now;
+
 import com.aksrua.common.entity.BaseEntity;
 import com.aksrua.user.data.entity.User;
 import jakarta.persistence.Entity;
@@ -28,4 +30,8 @@ public class AuthToken extends BaseEntity {
 	private LocalDateTime issuedAt;
 
 	private LocalDateTime expiredAt;
+
+	public void updateExpiredAt(int extentMinutes) {
+		this.expiredAt = now().plusMinutes(extentMinutes);
+	}
 }

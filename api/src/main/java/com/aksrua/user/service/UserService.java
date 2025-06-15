@@ -1,6 +1,7 @@
 package com.aksrua.user.service;
 
 import com.aksrua.common.exception.DuplicateResourceException;
+import com.aksrua.common.exception.NotFoundException;
 import com.aksrua.user.data.entity.User;
 import com.aksrua.user.data.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class UserService {
 
 	public User getUserDetails(Long userId) {
 		return userRepository.findById(userId)
-				.orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
+				.orElseThrow(() -> new NotFoundException("회원 정보를 찾을 수 없습니다."));
 	}
 
 	public User getReferenceById(Long userId) {

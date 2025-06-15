@@ -3,8 +3,10 @@ package com.aksrua.card.service;
 import com.aksrua.card.data.entity.Card;
 import com.aksrua.card.data.repository.CardRepository;
 import com.aksrua.common.exception.DuplicateResourceException;
+import com.aksrua.common.exception.NotFoundException;
+import com.aksrua.common.exception.UnauthorizedAccessException;
 import com.aksrua.filter.service.FilterService;
-import com.aksrua.interaction.data.repository.LikeRepository;
+import com.aksrua.user.data.entity.User;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +18,6 @@ import org.springframework.stereotype.Service;
 public class CardService {
 
 	private final CardRepository cardRepository;
-	private final LikeRepository likeRepository;
 	private final FilterService filterService ;
 
 	/**
@@ -44,8 +45,16 @@ public class CardService {
 		return cardRepository.findCardsByUserFilter(userId);
 	}
 
-	public Card getCardDetails(Long cardId) {
+	public Card getCardDetails(Long cardId, Long authId) {
+		if (!cardId.equals(authId)) {
+			throw new UnauthorizedAccessException("비정상적인 접근입니다.");
+		}
+
 		return cardRepository.findById(cardId)
-				.orElseThrow(() -> new IllegalArgumentException("카드 정보를 찾을 수 없습니다."));
+				.orElseThrow(() -> new NotFoundException("카드 정보를 찾을 수 없습니다."));
+	}
+
+	public List<Card> getCardsListByIdIn(List<Long> cardIds) {
+		return cardRepository.findByIdIn(cardIds);
 	}
 }

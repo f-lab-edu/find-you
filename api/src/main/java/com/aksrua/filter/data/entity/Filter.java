@@ -8,6 +8,7 @@ import com.querydsl.core.annotations.QueryProjection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
@@ -31,7 +32,7 @@ public class Filter extends BaseEntity {
 	@Id
 	private Long id;
 
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	@MapsId
 	@JoinColumn(name = "user_id")
 	private User user;

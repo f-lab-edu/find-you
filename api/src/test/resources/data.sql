@@ -114,8 +114,3 @@ INSERT INTO CARD (user_id, nickname, age, height, body_type, job, address, intro
 INSERT INTO CARD (user_id, nickname, age, height, body_type, job, address, introduction, religion, created_at, updated_at) VALUES (53, '마음결', 26, 160, 'SLIM', '영상 편집자', '서울특별시 중구', '섬세한 감정을 담는 영상처럼, 사람을 담고 싶어요.', 'NONE', now(), now());
 INSERT INTO CARD (user_id, nickname, age, height, body_type, job, address, introduction, religion, created_at, updated_at) VALUES (54, '은비령', 30, 164, 'SLIM_TONED', '심리상담사', '경기도 하남시', '마음을 읽고 공감할 줄 아는 사람입니다.', 'BUDDHISM', now(), now());
 INSERT INTO CARD (user_id, nickname, age, height, body_type, job, address, introduction, religion, created_at, updated_at) VALUES (55, '햇살가득', 20, 161, 'CHUBBY', '카페 운영자', '강원도 춘천시', '따뜻한 커피와 마음을 나누고 싶어요.', 'CHRISTIANITY', now(), now());
--- 1번 회원이 34,36,42,52 회원을 좋아함
-INSERT INTO LIKES (id, sender_card_id, receiver_card_id, like_status, registered_at, created_at, updated_at) VALUES (1, 1, 34, 0, now(), now(), now());
-INSERT INTO LIKES (id, sender_card_id, receiver_card_id, like_status, registered_at, created_at, updated_at) VALUES (2, 1, 36, 0, now(), now(), now());
-INSERT INTO LIKES (id, sender_card_id, receiver_card_id, like_status, registered_at, created_at, updated_at) VALUES (3, 1, 42, 0, now(), now(), now());
-INSERT INTO LIKES (id, sender_card_id, receiver_card_id, like_status, registered_at, created_at, updated_at) VALUES (4, 1, 52, 0, now(), now(), now());

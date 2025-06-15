@@ -42,3 +42,7 @@ date type vs datetime(6) type
 ### 추가적으로 채팅 기능이나 결제 기능을 확장하려고 한다면?
 
 ### enum type은 notblank 에러가 생긴다
+
+### jpa getReferenceById에 대하여
+
+### jpa 연관관계에서 card로 할때 cardid로 할때 어짜피 card검증을 해야하지 않나 ?

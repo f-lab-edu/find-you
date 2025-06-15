@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1")
 @RestController
 public class UserController {
-
 	private final UserService userService;
 
 	@PostMapping("/users")
@@ -35,11 +34,8 @@ public class UserController {
 
 	@GetMapping("/users/{userId}")
 	public ApiResponse<UserResponseDto> getUserDetail(@PathVariable Long userId) {
-		User findUser = userService.getUserDetail(userId);
+		User findUser = userService.getUserDetails(userId);
 		return ApiResponse.ok(UserResponseDto.fromEntity(findUser));
 	}
-
-	//TODO: 로그인
-
-	//TODO: 회원 탈퇴
+	//TODO: 회원탈퇴
 }

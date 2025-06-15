@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DislikeRepository extends JpaRepository<Dislike, Long> {
+	boolean existsBySenderCardIdAndReceiverCardId(Long senderCardId, Long receiverCardId);
 }

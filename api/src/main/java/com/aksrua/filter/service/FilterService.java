@@ -1,5 +1,6 @@
 package com.aksrua.filter.service;
 
+import com.aksrua.common.exception.NotFoundException;
 import com.aksrua.filter.data.entity.Filter;
 import com.aksrua.filter.data.repository.FilterRepository;
 import com.aksrua.filter.dto.request.UpdateFilterRequestDto;
@@ -7,6 +8,7 @@ import com.aksrua.user.data.entity.User;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.NotFound;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +25,7 @@ public class FilterService {
 
 	public Filter getFilterDetail(Long userId) {
 		return filterRepository.findByUserId(userId)
-				.orElseThrow(() -> new IllegalArgumentException("필터가 존재하지 않습니다."));
+				.orElseThrow(() -> new NotFoundException("필터가 존재하지 않습니다."));
 	}
 
 	/**
@@ -36,7 +38,7 @@ public class FilterService {
 	@Transactional
 	public Filter updateFilter(Long userId, Filter updateFilter) {
 		Filter findFilter = filterRepository.findByUserId(userId)
-				.orElseThrow(() -> new IllegalArgumentException("필터가 존재하지 않습니다."));
+				.orElseThrow(() -> new NotFoundException("필터가 존재하지 않습니다."));
 
 		findFilter.updateFilter(updateFilter);
 		return filterRepository.save(findFilter);

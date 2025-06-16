@@ -2,7 +2,10 @@ package com.aksrua.interaction.service;
 
 import com.aksrua.card.data.entity.Card;
 import com.aksrua.card.service.CardService;
+import com.aksrua.event.EventPublisher;
+import com.aksrua.event.UserLikedEvent;
 import com.aksrua.interaction.data.entity.Like;
+import com.aksrua.interaction.data.entity.LikeStatus;
 import com.aksrua.interaction.data.repository.DislikeRepository;
 import com.aksrua.interaction.data.repository.LikeRepository;
 import java.util.List;
@@ -20,6 +23,7 @@ public class InteractionService {
 	private final LikeRepository likeRepository;
 	private final DislikeRepository dislikeRepository;
 	private final CardService cardService;
+	private final EventPublisher eventPublisher;
 
 	@Transactional
 	public Like sendLike(Like like) {
@@ -30,14 +34,51 @@ public class InteractionService {
 		Optional<Like> hasLikedMe = findHasLikedMe(like);
 
 		if (hasLikedMe.isPresent()) {
+			/**
+			@desc: kafka 적용 전 save
 			Like updatedLike = hasLikedMe.get();
 			updatedLike.changeLikeStatusToMatched();
 			likeRepository.save(updatedLike);
 
 			like.changeLikeStatusToMatched();
+			*/
+			// event 발행
+			Like likedByTarget = hasLikedMe.get();
+
+			UserLikedEvent updateEvent = new UserLikedEvent(
+					likedByTarget.getSenderCardId(),
+					likedByTarget.getReceiverCardId(),
+					LikeStatus.MATCHED,
+					likedByTarget.getRegisteredAt(),
+					null,
+					likedByTarget.getMatchedAt()
+			);
+			eventPublisher.publishUserLikedEvent(updateEvent);
+
+			UserLikedEvent event = new UserLikedEvent(
+					like.getSenderCardId(),
+					like.getReceiverCardId(),
+					LikeStatus.MATCHED,
+					null,
+					null,
+					like.getMatchedAt()
+			);
+			eventPublisher.publishUserLikedEvent(event);
+
+			like.changeLikeStatusToMatched();
+			return like;
 		}
 
-		return likeRepository.save(like);
+		UserLikedEvent event = new UserLikedEvent(
+				like.getSenderCardId(),
+				like.getReceiverCardId(),
+				LikeStatus.SENT,
+				like.getRegisteredAt(),
+				null,
+				null
+		);
+		eventPublisher.publishUserLikedEvent(event);
+		return like;
 	}
 
 	private Optional<Like> findHasLikedMe(Like like) {

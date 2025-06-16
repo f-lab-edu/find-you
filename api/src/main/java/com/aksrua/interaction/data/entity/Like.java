@@ -43,6 +43,16 @@ public class Like extends BaseEntity {
 	// ENUM 중 [MATCHED]로 보내지는 시점
 	private LocalDateTime matchedAt;
 
+	public Like(Long senderCardId, Long receiverCardId, LikeStatus likeStatus, LocalDateTime registeredAt,
+				LocalDateTime checkedAt, LocalDateTime matchedAt) {
+		this.senderCardId = senderCardId;
+		this.receiverCardId = receiverCardId;
+		this.likeStatus = likeStatus;
+		this.registeredAt = registeredAt;
+		this.checkedAt = checkedAt;
+		this.matchedAt = matchedAt;
+	}
+
 	public static Like createSentLike(Long senderCardId, Long receiverCardId) {
 		return Like.builder()
 				.senderCardId(senderCardId)

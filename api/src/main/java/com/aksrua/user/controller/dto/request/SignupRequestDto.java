@@ -1,5 +1,6 @@
 package com.aksrua.user.controller.dto.request;
 
+import com.aksrua.common.util.PasswordUtil;
 import com.aksrua.user.data.entity.Gender;
 import com.aksrua.user.data.entity.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -48,7 +49,7 @@ public class SignupRequestDto {
 				.gender(gender)
 				.birthDate(birthDate)
 				.email(email)
-				.password(password)//TODO: password encode
+				.password(PasswordUtil.hash(password))
 				.phoneNumber(phoneNumber)
 				.registeredAt(LocalDateTime.now())
 				.build();

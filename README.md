@@ -5,6 +5,7 @@
 [Notion](https://www.notion.so/gyeomfka/find-you-API-1d466fd5fe9e807cac27c42909ccfe88)
 
 # 서비스 요구사항
+[Github Wiki](https://github.com/f-lab-edu/find-you/wiki/Service-Requirements)
 1. 회원가입 후 Profile Card가 생성이 된다.
 2. 닉네임 중복체크 (분산캐시 및 레디스)
 3. 

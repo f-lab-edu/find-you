@@ -15,7 +15,7 @@
 [링크 (Github Wiki)](https://github.com/f-lab-edu/find-you/wiki/Service-Requirements)
 
 
-
+<img src="https://github.com/f-lab-edu/find-you/blob/main/readme/Layered_Test.png" width="100%">
 
 ## 3. 고도화 리스트
 1. 분산 DB환경 구축

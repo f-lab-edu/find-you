@@ -14,12 +14,20 @@
 기획적으로 구상한 요구사항을 모식도와 문서로 정리해둠으로써, `수행해야 할 테스트`, `기능개발 목록` 그리고 `프로젝트 방향성`에 대해 명확하게 기록 
 [링크 (Github Wiki)](https://github.com/f-lab-edu/find-you/wiki/Service-Requirements)
 
-
+## 3. 개발원칙
+### 3.1. 테스트 코드 작성
+${테스트를 작성 한 이유}
 <img src="https://github.com/f-lab-edu/find-you/blob/main/readme/Layered_Test.png">
+- ${Repository Test}
+- ${Service Test}
+- ${Controller Test}
 
-## 3. 고도화 리스트
+
+## 4. 고도화 리스트
+단순 100~200건의 데이터를 활용한 기능 구현(테스트)으로 안주하지 않고, 100만건 이상의 데이터가 들어왔을때의 상황을 나름 가정해 본 뒤 기능 개선 및 외부 인프라 도입
+
 1. 분산 DB환경 구축
-2. 중복체크 시 분산캐시 및 레디스 활용
+2. 닉네임 및 이메일 중복체크 시 분산캐시 및 레디스 활용
 3. 위치기반 상대와 나와의 거리 계산
 4. 채팅
 5. 결제

@@ -11,7 +11,8 @@
 
 
 ## 2. 서비스 요구사항
-[Github Wiki](https://github.com/f-lab-edu/find-you/wiki/Service-Requirements)
+기획적으로 구상한 요구사항을 모식도와 문서로 정리해둠으로써, `수행해야 할 테스트`, `기능개발 목록` 그리고 `프로젝트 방향성`에 대해 명확하게 기록 
+[링크 (Github Wiki)](https://github.com/f-lab-edu/find-you/wiki/Service-Requirements)
 
 
 

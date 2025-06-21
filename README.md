@@ -22,10 +22,21 @@ ${테스트를 작성 한 이유}
 - ${Service Test}
 - ${Controller Test}
 
+### 3.2. Event-Driven Architecture
+해당 서비스의 가장 중요한 기능 중 하나인 '좋아요' 기능에 대한 트랜잭션에서, 서비스 간 강한 결합도가 생성되어 주요기능인 '좋아요'는 본인의 이벤트만 발행하고 부수 서비스는 이벤트가 발행되었을 때 실행.
+*추후 확장 용이성 보장*
+
+#### 1. 기존 구현
+<img src="https://github.com/f-lab-edu/find-you/blob/main/readme/send-like.png">
+
+#### 2. Event-Driven Architecture 적용
+<img src="https://github.com/f-lab-edu/find-you/blob/main/readme/eda.png">
+
 ## 4. ERD
+[작성 예정]
 
 ## 5. 고도화 `TODO` 리스트
-단순 100~200건의 데이터를 활용한 기능 구현(테스트)으로 안주하지 않고, 100만건 이상의 데이터가 들어왔을때의 상황을 나름 가정해 본 뒤 기능 개선 및 외부 인프라 도입
+단순 100~200건의 데이터를 활용한 기능 구현(테스트)으로 안주하지 않고, n만건 이상의 데이터가 들어왔을때의 상황을 나름 가정해 본 뒤 기능 개선 및 외부 인프라 도입
 
 1. 분산 DB환경 구축
 2. 닉네임 및 이메일 중복체크 시 분산캐시 및 레디스 활용

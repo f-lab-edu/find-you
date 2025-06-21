@@ -2,8 +2,11 @@ package com.aksrua.interaction.service;
 
 import com.aksrua.card.data.entity.Card;
 import com.aksrua.card.service.CardService;
-import com.aksrua.event.EventPublisher;
-import com.aksrua.event.UserLikedEvent;
+import com.aksrua.coin.service.CoinService;
+import com.aksrua.common.EventType;
+import com.aksrua.common.outboxmessagerelay.OutboxEventPublisher;
+import com.aksrua.common.payload.LikeEventPayload;
+import com.aksrua.interaction.data.entity.Dislike;
 import com.aksrua.interaction.data.entity.Like;
 import com.aksrua.interaction.data.entity.LikeStatus;
 import com.aksrua.interaction.data.repository.DislikeRepository;
@@ -18,15 +21,23 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class InteractionService {
 
+	//TODO: validate가 너무 난잡하게 되어있다.
 	private final LikeFinder likeFinder;
 	private final LikeValidator likeValidator;
 	private final LikeRepository likeRepository;
 	private final DislikeRepository dislikeRepository;
 	private final CardService cardService;
-	private final EventPublisher eventPublisher;
+	private final CoinService coinService;
+
+	private final OutboxEventPublisher outboxEventPublisher;
 
 	@Transactional
 	public Like sendLike(Like like) {
+		// 먼저 보내는 사람의 코인이 있는지 없는지 여부 조사
+		if (!coinService.hasEnoughCoins()) {
+			throw new RuntimeException("코인이 없습니다.");
+		}
+
 		// 중복 좋아요, 나에게 보내는 좋아요 검증
 		likeValidator.validateLikeRequest(like);
 
@@ -34,51 +45,41 @@ public class InteractionService {
 		Optional<Like> hasLikedMe = findHasLikedMe(like);
 
 		if (hasLikedMe.isPresent()) {
-			/**
-			@desc: kafka 적용 전 save
 			Like updatedLike = hasLikedMe.get();
 			updatedLike.changeLikeStatusToMatched();
-			likeRepository.save(updatedLike);
+			Like receivedLike = likeRepository.save(updatedLike);
+
+			outboxEventPublisher.publish(
+					EventType.LIKE,
+					LikeEventPayload.builder()
+							.likeId(receivedLike.getId())
+							.senderCardId(receivedLike.getSenderCardId())
+							.receiverCardId(receivedLike.getReceiverCardId())
+							.likeStatus(String.valueOf(receivedLike.getLikeStatus()))
+							.registeredAt(receivedLike.getRegisteredAt())
+							.checkedAt(receivedLike.getCheckedAt())
+							.matchedAt(receivedLike.getMatchedAt())
+							.build()
+			);
 
 			like.changeLikeStatusToMatched();
-			*/
-			// event 발행
-			Like likedByTarget = hasLikedMe.get();
-
-			UserLikedEvent updateEvent = new UserLikedEvent(
-					likedByTarget.getSenderCardId(),
-					likedByTarget.getReceiverCardId(),
-					LikeStatus.MATCHED,
-					likedByTarget.getRegisteredAt(),
-					null,
-					likedByTarget.getMatchedAt()
-			);
-			eventPublisher.publishUserLikedEvent(updateEvent);
-
-			UserLikedEvent event = new UserLikedEvent(
-					like.getSenderCardId(),
-					like.getReceiverCardId(),
-					LikeStatus.MATCHED,
-					null,
-					null,
-					like.getMatchedAt()
-			);
-			eventPublisher.publishUserLikedEvent(event);
-
-			like.changeLikeStatusToMatched();
-			return like;
 		}
+		Like sentLike = likeRepository.save(like);
 
-		UserLikedEvent event = new UserLikedEvent(
-				like.getSenderCardId(),
-				like.getReceiverCardId(),
-				LikeStatus.SENT,
-				like.getRegisteredAt(),
-				null,
-				null
+		outboxEventPublisher.publish(
+				EventType.LIKE,
+				LikeEventPayload.builder()
+						.likeId(sentLike.getId())
+						.senderCardId(sentLike.getSenderCardId())
+						.receiverCardId(sentLike.getReceiverCardId())
+						.likeStatus(String.valueOf(sentLike.getLikeStatus()))
+						.registeredAt(sentLike.getRegisteredAt())
+						.checkedAt(sentLike.getCheckedAt())
+						.matchedAt(sentLike.getMatchedAt())
+						.build()
 		);
-		eventPublisher.publishUserLikedEvent(event);
-		return like;
+
+		return sentLike;
 	}
 
 	private Optional<Like> findHasLikedMe(Like like) {
@@ -115,4 +116,7 @@ public class InteractionService {
 	/**
 	 *  싫어요 보내기
 	 */
+	public void sendDisLike(Dislike dislike) {
+
+	}
 }

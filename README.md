@@ -17,7 +17,8 @@
 ## 3. 개발원칙
 ### 3.1. 테스트 코드 작성
 ${테스트를 작성 한 이유}
-<img src="https://github.com/f-lab-edu/find-you/blob/main/readme/Layered_Test.png">
+<img src="./readme/Layered_Test.png">
+
 - ${Repository Test}
 - ${Service Test}
 - ${Controller Test}
@@ -27,10 +28,11 @@ ${테스트를 작성 한 이유}
 *추후 확장 용이성 보장*
 
 #### 1. 기존 구현
-<img src="https://github.com/f-lab-edu/find-you/blob/main/readme/send-like.png">
+<img src="./readme/send-like.png">
 
 #### 2. Event-Driven Architecture 적용
-<img src="https://github.com/f-lab-edu/find-you/blob/main/readme/eda.png">
+<img src="./readme/eda.png">
+
 
 ## 4. ERD
 [작성 예정]

@@ -7,30 +7,35 @@ plugins {
 group = 'com.aksrua'
 version = '0.0.1-SNAPSHOT'
 
-repositories {
-	mavenCentral()
-}
-
-subprojects {
-	group 'com.example'
-	version '0.0.1-SNAPSHOT'
-	sourceCompatibility = '21'
-
-	apply plugin: 'java'
-	apply plugin: 'java-library'
-	apply plugin: 'org.springframework.boot'
-	apply plugin: 'io.spring.dependency-management'
-
+allprojects {
 	repositories {
 		mavenCentral()
 	}
 
-	dependencies { // 모든 하위 모듈에 추가 될 의존성 목록입니다.
-		implementation 'org.springframework.boot:spring-boot-starter'
-		testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	apply plugin: 'java'
+	apply plugin: 'org.springframework.boot'
+	apply plugin: 'io.spring.dependency-management'
+
+	java {
+		sourceCompatibility = JavaVersion.VERSION_21
+		targetCompatibility = JavaVersion.VERSION_21
 	}
 
-	test {
+	dependencies {
+		implementation 'ch.qos.logback:logback-classic'
+		implementation 'org.springframework.boot:spring-boot-starter'
+
+		compileOnly 'org.projectlombok:lombok'
+		annotationProcessor 'org.projectlombok:lombok'
+
+		testCompileOnly 'org.projectlombok:lombok'
+		testAnnotationProcessor 'org.projectlombok:lombok'
+
+		testImplementation 'org.springframework.boot:spring-boot-starter-test'
+		testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	}
+
+	tasks.named('test') {
 		useJUnitPlatform()
 	}
 }
